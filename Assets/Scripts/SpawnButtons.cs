@@ -21,10 +21,10 @@ public class SpawnButtons : MonoBehaviour
         
     }
 
-    public GameObject spawn(float uv, float type, float beat)
+    public GameObject spawn(float uv, float type, float beat, int indexin)
     {
         GameObject button = Instantiate(buttonPrefab, new Vector3(path.PointOnNormalizedPath(uv).x, path.PointOnNormalizedPath(uv).y, buttonPrefab.transform.position.z), new Quaternion(0, 0, 0, 0));
-        button.GetComponent<Button>().Init(Mathf.RoundToInt(type), beat);
+        button.GetComponent<Button>().Init(Mathf.RoundToInt(type), beat, indexin);
         return button;
     }
 }

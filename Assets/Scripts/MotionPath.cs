@@ -1,4 +1,7 @@
 using UnityEngine;
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 using System.Collections;
 
 // The purpose of this class is to allow normalized position and direction (normal) lookup of an iTween curve
@@ -179,6 +182,8 @@ public class MotionPath : MonoBehaviour
 		Vector3 norm = new Vector3(xLUT.Evaluate(uvN), yLUT.Evaluate(uvN), zLUT.Evaluate(uvN));
 		return transform.localToWorldMatrix.MultiplyVector(norm);
 	}
+
+    #if UNITY_EDITOR
 	
 	void OnDrawGizmos()
 	{
@@ -193,4 +198,6 @@ public class MotionPath : MonoBehaviour
 		}
 		
 	}
+    
+    #endif
 }

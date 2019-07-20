@@ -29,6 +29,9 @@ public class MusicHandler : MonoBehaviour
     [HideInInspector]
     public float dsptimesong;
 
+    //The offset to the first beat of the song in seconds
+    public float firstBeatOffset;
+
     public int beatsInAdvance = 3;
 
     public int pathBeatsInAdvance = 6;
@@ -41,7 +44,8 @@ public class MusicHandler : MonoBehaviour
     public Vector2[] notes;
 
     //the index of the next note to be spawned
-    int nextIndex = 0;
+    [HideInInspector]
+    public int nextIndex = 0;
 
     // Camera animation
     public Vector2[] cameraKeyframes;
@@ -104,15 +108,18 @@ public class MusicHandler : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        //Debugging
+        //print(nextIndex);
+
         //calculate the position in seconds
-        songPosition = (float)(source.time - dsptimesong);
+        songPosition = (float)(source.time - dsptimesong - firstBeatOffset);
 
         //calculate the position in beats
         songPosInBeats = songPosition / secPerBeat;
 
         if (nextIndex < notes.Length && notes[nextIndex].x < songPosInBeats + beatsInAdvance)
         {
-            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, songPosInBeats);
+            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, songPosInBeats, nextIndex);
             gameHandler.buttons.Add(button);
             //initialize the fields of the music note
 

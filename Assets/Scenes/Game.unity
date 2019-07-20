@@ -817,6 +817,7 @@ MonoBehaviour:
   - {fileID: 6320126319961516777, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 3676818205159229461, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   buttons: []
+  inputs: 20000000610000007300000064000000660000006700000068000000
 --- !u!1 &1360104490
 GameObject:
   m_ObjectHideFlags: 0
@@ -1286,6 +1287,7 @@ MonoBehaviour:
   songPosInBeats: 0
   secPerBeat: 0.34285715
   dsptimesong: 0
+  firstBeatOffset: 0.926
   beatsInAdvance: 5
   pathBeatsInAdvance: 6
   bpm: 175

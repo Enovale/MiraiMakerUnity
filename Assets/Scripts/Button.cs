@@ -6,9 +6,10 @@ public class Button : MonoBehaviour
 {
 
     public int type;
+    public float beat;
+    public int index;
     private GameObject gameHandler;
     private new SpriteRenderer renderer;
-    public float beat;
 
     // Start is called before the first frame update
     void Start()
@@ -16,7 +17,17 @@ public class Button : MonoBehaviour
         
     }
 
-    public void Init(int typein, float curbeat)
+    public void Hit(float songPosInBeats, float bpm)
+    {
+        
+        if(songPosInBeats >= beat && songPosInBeats < (beat + (bpm / 60) / 4))
+        {
+            print("Did hit");
+            Destroy(this);
+        }
+    }
+
+    public void Init(int typein, float curbeat, int indexin)
     {
         // Create button
         beat = curbeat;
@@ -25,6 +36,7 @@ public class Button : MonoBehaviour
         renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = types[typein];
         type = typein;
+        index = indexin;
     }
 
     // Update is called once per frame
