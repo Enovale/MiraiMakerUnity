@@ -56,6 +56,18 @@ TextureImporter:
   - first:
       213: 8783020228835310329
     second: Spark_9
+  - first:
+      213: -2551527558886970859
+    second: Cool Rank
+  - first:
+      213: -4069526271154166440
+    second: Worst Rank
+  - first:
+      213: -4014829417925878319
+    second: Fine Rank
+  - first:
+      213: 5459365776258055860
+    second: Safe Rank
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -522,6 +534,90 @@ TextureImporter:
       bones: []
       spriteID: f3c79daae6e1e4845b511372f4ff9f6c
       internalID: 8783020228835310329
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Cool Rank
+      rect:
+        serializedVersion: 2
+        x: 1410
+        y: 163
+        width: 55
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 96a9563dfddd4f8459bdf552b54469f9
+      internalID: -2551527558886970859
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Worst Rank
+      rect:
+        serializedVersion: 2
+        x: 1390
+        y: 183
+        width: 73
+        height: 15
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 229b3cd661019df4a864c9fa996ecf75
+      internalID: -4069526271154166440
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Fine Rank
+      rect:
+        serializedVersion: 2
+        x: 1470
+        y: 162
+        width: 53
+        height: 16
+      alignment: 0
+      pivot: {x: 0.5, y: 0.5}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b2a390c95be7c134fa6024544d619440
+      internalID: -4014829417925878319
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Safe Rank
+      rect:
+        serializedVersion: 2
+        x: 1474
+        y: 290
+        width: 55
+        height: 16
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: b17162d83a895c84ab985cad48c25ffc
+      internalID: 5459365776258055860
       vertices: []
       indices: 
       edges: []

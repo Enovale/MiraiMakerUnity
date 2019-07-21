@@ -96,6 +96,12 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   type: 0
   beat: 0
+  index: 0
+  btn:
+    btn: {fileID: 0}
+    key: 0
+  rankPrefab: {fileID: 7660966156831988746, guid: 26b506de508be74488442183f10b3df6,
+    type: 3}
 --- !u!95 &3908108856671106562
 Animator:
   serializedVersion: 3

@@ -25,6 +25,11 @@ public class MusicHandler : MonoBehaviour
     [HideInInspector]
     public float secPerBeat;
 
+    public float fadeOffsetInBeats;
+
+    [HideInInspector]
+    public float fadeEnd;
+
     //how much time (in seconds) has passed since the song started
     [HideInInspector]
     public float dsptimesong;
@@ -119,8 +124,8 @@ public class MusicHandler : MonoBehaviour
 
         if (nextIndex < notes.Length && notes[nextIndex].x < songPosInBeats + beatsInAdvance)
         {
-            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, songPosInBeats, nextIndex);
-            gameHandler.buttons.Add(button);
+            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, songPosInBeats + beatsInAdvance, nextIndex);
+            gameHandler.buttons.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type]));
             //initialize the fields of the music note
 
             nextIndex++;
@@ -133,13 +138,13 @@ public class MusicHandler : MonoBehaviour
 
         // Fadeout line after passing
         Gradient gradient = new Gradient();
-        float gradient1 = ((songPosInBeats / lengthInBeats) - (bpm / 60) * 0.01f);
-        float gradient2 = ((songPosInBeats / lengthInBeats));
+        float gradient1 = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats) - (bpm / 60) * 0.01f);
+        fadeEnd = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats));
         float end1 = (songPosInBeats + pathBeatsInAdvance) / lengthInBeats;
         float end2 = end1;
         gradient.SetKeys(
             new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) },
-            new GradientAlphaKey[] { new GradientAlphaKey(0, gradient1), new GradientAlphaKey(1, gradient2), new GradientAlphaKey(1, end1), new GradientAlphaKey(0, end2), new GradientAlphaKey(0, 1.0f) }
+            new GradientAlphaKey[] { new GradientAlphaKey(0, gradient1), new GradientAlphaKey(1, fadeEnd), new GradientAlphaKey(1, end1), new GradientAlphaKey(0, end2), new GradientAlphaKey(0, 1.0f) }
         );
         gradient.mode = GradientMode.Blend;
         gamePath.GetComponent<MotionPath>().line.GetComponent<LineRenderer>().colorGradient = gradient;
