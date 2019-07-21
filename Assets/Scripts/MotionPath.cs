@@ -51,6 +51,7 @@ public class MotionPath : MonoBehaviour
 	void Start()
 	{
 		Init ();
+        // Spawn the rendered line using the object provided if it exists
         if(lineObject != null)
         {
             line = Instantiate(lineObject, new Vector3(transform.position.x, transform.position.y, lineObject.transform.position.z), new Quaternion(0, 0, 0, 0));
@@ -64,13 +65,11 @@ public class MotionPath : MonoBehaviour
             {
                 float pm = (float)i / SmoothAmount;
                 Vector3 currPt = iTween.Interp(vector3s, pm);
-                //Gizmos.DrawLine(currPt, prevPt);
                 line.GetComponent<LineRenderer>().SetPosition(i-1, prevPt);
                 line.GetComponent<LineRenderer>().SetPosition(i, currPt);
                 prevPt = currPt;
             }
             line.transform.localScale = transform.localScale;
-            //line.GetComponent<LineRenderer>().SetPositions(vector3s);
         }
 	}
 	

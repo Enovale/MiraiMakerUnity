@@ -2,9 +2,12 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// This class manages the game's musical state, i.e spawning notes, cursor position, etc
+/// </summary>
 public class MusicHandler : MonoBehaviour
 {
-
+    // Many gameobject references and references to the song file
     public AudioClip song;
     public AudioSource source;
     public SpawnButtons buttonSpawner;
@@ -15,13 +18,13 @@ public class MusicHandler : MonoBehaviour
     public GameObject sparksPrefab;
     private GameObject sparksObj;
 
-    //the current position of the song (in seconds)
+    // The current position of the song (in seconds)
     public float songPosition;
 
-    //the current position of the song (in beats)
+    // The current position of the song (in beats)
     public float songPosInBeats;
 
-    //the duration of a beat
+    // The duration of a beat
     [HideInInspector]
     public float secPerBeat;
 
@@ -30,11 +33,11 @@ public class MusicHandler : MonoBehaviour
     [HideInInspector]
     public float fadeEnd;
 
-    //how much time (in seconds) has passed since the song started
+    // How much time (in seconds) has passed since the song started
     [HideInInspector]
     public float dsptimesong;
 
-    //The offset to the first beat of the song in seconds
+    // The offset to the first beat of the song in seconds
     public float firstBeatOffset;
 
     public int beatsInAdvance = 3;
@@ -45,10 +48,10 @@ public class MusicHandler : MonoBehaviour
 
     public float lengthInBeats;
 
-    //keep all the position-in-beats of notes in the song
+    // Keep all the position-in-beats of notes in the song
     public Vector2[] notes;
 
-    //the index of the next note to be spawned
+    // The index of the next note to be spawned
     [HideInInspector]
     public int nextIndex = 0;
 
@@ -57,10 +60,13 @@ public class MusicHandler : MonoBehaviour
 
     private GameHandler gameHandler;
 
-    /// Takes float beat input to match Vector2 type.
+    /// <summary>
+    /// Gets the position of the camera on it's path depending on the keyframes provided
+    /// </summary>
+    /// <returns></returns>
     float GetPathProgress()
     {
-        // Assumed beatMap has atleast 2 elements. TODO: correct error handling
+        // Assumed Beat Map has atleast 2 elements. TODO: correct error handling
         int startInterval = 0;
         int endInterval = 0;
         for (int i = 1; i < cameraKeyframes.Length; i++)
@@ -86,50 +92,53 @@ public class MusicHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        // Spawn the sparks on the end of the path
         sparksObj = Instantiate(sparksPrefab, new Vector3(0,0,0), new Quaternion(0,0,0,0));
 
+        // Get reference to the Game Handler
         GameHandler[] objects = FindObjectsOfType<GameHandler>();
         gameHandler = objects[0];
 
-        //calculate how many seconds is one beat
-        //we will see the declaration of bpm later
+        // Calculate how many seconds is one beat
+        // We will see the declaration of bpm later
         secPerBeat = 60f / bpm;
 
         lengthInBeats = (bpm / 60) * song.length;
 
-        //record the time when the song starts
+        // Get the time that the song starts
         dsptimesong = (float)source.time;
 
+        // Play the actual song
         source.clip = song;
-
         source.Play();
-
-        
-        //cursor.GetComponent<FollowMotionPath>().speed = cursor.GetComponent<FollowMotionPath>().motionPath.length / song.length;
-        //camera.GetComponent<FollowMotionPath>().speed = (bpm / 60) / lengthInBeats;
     }
 
     // Update is called once per frame
     void Update()
     {
         //Debugging
-        //print(nextIndex);
+        if (gameHandler.debugMode == true)
+        {
+            print(nextIndex);
+        }
 
-        //calculate the position in seconds
+        // Calculate the position in seconds
         songPosition = (float)(source.time - dsptimesong - firstBeatOffset);
 
-        //calculate the position in beats
+        // Calculate the position in beats
         songPosInBeats = songPosition / secPerBeat;
 
+        // If it's time to spawn the next note based on the beatsInAdvance, do so
         if (nextIndex < notes.Length && notes[nextIndex].x < songPosInBeats + beatsInAdvance)
         {
+            // Spawn it and initialize the fields of the music note
             GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, songPosInBeats + beatsInAdvance, nextIndex);
             gameHandler.buttons.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type]));
-            //initialize the fields of the music note
 
             nextIndex++;
         }
+
+        // Move the cursor and camera respective to the current pos and keyframes
         Vector3 cursorPos = cursor.GetComponent<FollowMotionPath>().motionPath.PointOnNormalizedPath(songPosInBeats / lengthInBeats);
         cursor.transform.position = cursorPos;
         float final = GetPathProgress();
@@ -148,6 +157,8 @@ public class MusicHandler : MonoBehaviour
         );
         gradient.mode = GradientMode.Blend;
         gamePath.GetComponent<MotionPath>().line.GetComponent<LineRenderer>().colorGradient = gradient;
+
+        // Move sparks to the tip of the line
         Vector3 sparksPos = cursor.GetComponent<FollowMotionPath>().motionPath.PointOnNormalizedPath(end1);
         sparksObj.transform.position = sparksPos;
     }
