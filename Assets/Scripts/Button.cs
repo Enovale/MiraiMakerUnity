@@ -55,7 +55,6 @@ public class Button : MonoBehaviour
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(rate);
         Destroy(this.gameObject);
-        gameHandler.hits[rate]++;
     }
 
     /// <summary>
@@ -65,9 +64,8 @@ public class Button : MonoBehaviour
     {
         print("Fucking missed idiot");
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
-        rankText.GetComponent<RankText>().Init(4);
+        rankText.GetComponent<RankText>().Init(3);
         Destroy(this.gameObject);
-        gameHandler.hits[4]++;
     }
 
     /// <summary>
@@ -116,12 +114,11 @@ public class Button : MonoBehaviour
         {
             return 2;
         }
-        // Sad Rank
+        // Worst Rank
         else if ((pos <= beat && pos > beat - ((bpm / 60))) || (pos >= beat && pos < beat + ((bpm / 60))))
         {
             return 3;
         }
-        // Missed
         else
         {
             return 4;

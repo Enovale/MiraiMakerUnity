@@ -68,12 +68,6 @@ TextureImporter:
   - first:
       213: 5459365776258055860
     second: Safe Rank
-  - first:
-      213: -5892842267682474139
-    second: Swipe Button
-  - first:
-      213: 8989679837231597688
-    second: Sad Rank
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -616,7 +610,7 @@ TextureImporter:
         width: 55
         height: 16
       alignment: 0
-      pivot: {x: 0.5, y: 0.5}
+      pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -624,48 +618,6 @@ TextureImporter:
       bones: []
       spriteID: b17162d83a895c84ab985cad48c25ffc
       internalID: 5459365776258055860
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Swipe Button
-      rect:
-        serializedVersion: 2
-        x: 590
-        y: 89
-        width: 44
-        height: 49
-      alignment: 9
-      pivot: {x: 0.5, y: 0.454973}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: d97c1900ecbb3f34aaa73221bbb5ee7e
-      internalID: -5892842267682474139
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: Sad Rank
-      rect:
-        serializedVersion: 2
-        x: 1082
-        y: 58
-        width: 46
-        height: 16
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      outline: []
-      physicsShape: []
-      tessellationDetail: 0
-      bones: []
-      spriteID: e85b1f85b7acb8243998ac81ba67b4bd
-      internalID: 8989679837231597688
       vertices: []
       indices: 
       edges: []

@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
 
 /// <summary>
 /// This class manages the game's musical state, i.e spawning notes, cursor position, etc
@@ -15,7 +14,6 @@ public class MusicHandler : MonoBehaviour
     public GameObject cursor;
     public new GameObject camera;
     public GameObject gamePath;
-    public GameObject sliderObj;
 
     public GameObject sparksPrefab;
     private GameObject sparksObj;
@@ -25,9 +23,6 @@ public class MusicHandler : MonoBehaviour
 
     // The current position of the song (in beats)
     public float songPosInBeats;
-
-    // Song has finished playing
-    public bool finished = false;
 
     // The duration of a beat
     [HideInInspector]
@@ -50,10 +45,6 @@ public class MusicHandler : MonoBehaviour
     public int pathBeatsInAdvance = 6;
 
     public float bpm = 205;
-
-    public float length;
-
-    public bool paused = false;
 
     public float lengthInBeats;
 
@@ -98,11 +89,6 @@ public class MusicHandler : MonoBehaviour
         return percent;
     }
 
-    public void MoveSlider()
-    {
-        source.time = length * sliderObj.GetComponent<Slider>().value;
-    }
-
     // Start is called before the first frame update
     void Start()
     {
@@ -112,20 +98,12 @@ public class MusicHandler : MonoBehaviour
         // Get reference to the Game Handler
         GameHandler[] objects = FindObjectsOfType<GameHandler>();
         gameHandler = objects[0];
-        
-        // Spawn the debug slider if needed
-        if(gameHandler.debugMode)
-        {
-            sliderObj.SetActive(true);
-        }
 
         // Calculate how many seconds is one beat
         // We will see the declaration of bpm later
         secPerBeat = 60f / bpm;
 
         lengthInBeats = (bpm / 60) * song.length;
-
-        length = song.length;
 
         // Get the time that the song starts
         dsptimesong = (float)source.time;
@@ -141,13 +119,7 @@ public class MusicHandler : MonoBehaviour
         //Debugging
         if (gameHandler.debugMode == true)
         {
-            //print(nextIndex);
-        }
-
-        // Set finished to true if the song is over
-        if(source.isPlaying != true && paused == false)
-        {
-            finished = true;
+            print(nextIndex);
         }
 
         // Calculate the position in seconds
@@ -172,13 +144,6 @@ public class MusicHandler : MonoBehaviour
         float final = GetPathProgress();
         Vector3 cameraPos = camera.GetComponent<FollowMotionPath>().motionPath.PointOnNormalizedPath(final);
         camera.transform.position = cameraPos;
-
-        // Move debug slider to song positon
-        if(gameHandler.debugMode)
-        {
-            Slider slider = sliderObj.GetComponent<Slider>();
-            slider.SetValueWithoutNotify(songPosInBeats / lengthInBeats);
-        }
 
         // Fadeout line after passing
         Gradient gradient = new Gradient();
