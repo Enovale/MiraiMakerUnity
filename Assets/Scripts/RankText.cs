@@ -7,6 +7,7 @@ public class RankText : MonoBehaviour
 
     public Sprite[] rankSprites;
     public GameObject spriteObj;
+    private bool alive = true;
 
     // Start is called before the first frame update
     void Start()
@@ -22,6 +23,17 @@ public class RankText : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        
+        if (spriteObj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("RankFloat"))
+        {
+            // Avoid any reload.
+            alive = true;
+        } else
+        {
+            alive = false;
+        }
+        if(alive == false)
+        {
+            Destroy(this.gameObject);
+        }
     }
 }
