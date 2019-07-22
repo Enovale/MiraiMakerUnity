@@ -8,13 +8,17 @@ using UnityEngine.UI;
 /// </summary>
 public class MusicHandler : MonoBehaviour
 {
+    #region References
     // Many gameobject references and references to the song file
     public AudioClip song;
     public AudioSource source;
     public SpawnButtons buttonSpawner;
     public GameObject cursor;
     public new GameObject camera;
+    private FollowMotionPath cursorMP;
+    private FollowMotionPath cameraMP;
     public GameObject gamePath;
+    private MotionPath gamePathMP;
     public GameObject sliderObj;
 
     public GameObject sparksPrefab;
@@ -22,52 +26,36 @@ public class MusicHandler : MonoBehaviour
 
     // The current position of the song (in seconds)
     public float songPosition;
-
     // The current position of the song (in beats)
     public float songPosInBeats;
-
     // Song has finished playing
     public bool finished = false;
-
     // The duration of a beat
     [HideInInspector]
     public float secPerBeat;
-
     public float fadeOffsetInBeats;
-
     [HideInInspector]
     public float fadeEnd;
-
     // How much time (in seconds) has passed since the song started
     [HideInInspector]
     public float dsptimesong;
-
     // The offset to the first beat of the song in seconds
     public float firstBeatOffset;
-
     public int beatsInAdvance = 3;
-
     public int pathBeatsInAdvance = 6;
-
     public float bpm = 205;
-
     public float length;
-
     public bool paused = false;
-
     public float lengthInBeats;
-
     // Keep all the position-in-beats of notes in the song
     public Vector2[] notes;
-
     // The index of the next note to be spawned
     [HideInInspector]
     public int nextIndex = 0;
-
     // Camera animation
     public Vector2[] cameraKeyframes;
-
     private GameHandler gameHandler;
+    #endregion
 
     /// <summary>
     /// Gets the position of the camera on it's path depending on the keyframes provided
@@ -106,15 +94,21 @@ public class MusicHandler : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        #region Init References
+        cameraMP = camera.GetComponent<FollowMotionPath>();
+        cursorMP = cursor.GetComponent<FollowMotionPath>();
+        gamePathMP = gamePath.GetComponent<MotionPath>();
+
         // Spawn the sparks on the end of the path
-        sparksObj = Instantiate(sparksPrefab, new Vector3(0,0,0), new Quaternion(0,0,0,0));
+        sparksObj = Instantiate(sparksPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
 
         // Get reference to the Game Handler
         GameHandler[] objects = FindObjectsOfType<GameHandler>();
         gameHandler = objects[0];
-        
+        #endregion
+
         // Spawn the debug slider if needed
-        if(gameHandler.debugMode)
+        if (gameHandler.debugMode)
         {
             sliderObj.SetActive(true);
         }
@@ -145,7 +139,7 @@ public class MusicHandler : MonoBehaviour
         }
 
         // Set finished to true if the song is over
-        if(source.isPlaying != true && paused == false)
+        if (source.isPlaying != true && paused == false)
         {
             finished = true;
         }
@@ -167,14 +161,14 @@ public class MusicHandler : MonoBehaviour
         }
 
         // Move the cursor and camera respective to the current pos and keyframes
-        Vector3 cursorPos = cursor.GetComponent<FollowMotionPath>().motionPath.PointOnNormalizedPath(songPosInBeats / lengthInBeats);
+        Vector3 cursorPos = cursorMP.motionPath.PointOnNormalizedPath(songPosInBeats / lengthInBeats);
         cursor.transform.position = cursorPos;
         float final = GetPathProgress();
-        Vector3 cameraPos = camera.GetComponent<FollowMotionPath>().motionPath.PointOnNormalizedPath(final);
+        Vector3 cameraPos = cameraMP.motionPath.PointOnNormalizedPath(final);
         camera.transform.position = cameraPos;
 
         // Move debug slider to song positon
-        if(gameHandler.debugMode)
+        if (gameHandler.debugMode)
         {
             Slider slider = sliderObj.GetComponent<Slider>();
             slider.SetValueWithoutNotify(songPosInBeats / lengthInBeats);
@@ -191,10 +185,10 @@ public class MusicHandler : MonoBehaviour
             new GradientAlphaKey[] { new GradientAlphaKey(0, gradient1), new GradientAlphaKey(1, fadeEnd), new GradientAlphaKey(1, end1), new GradientAlphaKey(0, end2), new GradientAlphaKey(0, 1.0f) }
         );
         gradient.mode = GradientMode.Blend;
-        gamePath.GetComponent<MotionPath>().line.GetComponent<LineRenderer>().colorGradient = gradient;
+        gamePathMP.line.GetComponent<LineRenderer>().colorGradient = gradient;
 
         // Move sparks to the tip of the line
-        Vector3 sparksPos = cursor.GetComponent<FollowMotionPath>().motionPath.PointOnNormalizedPath(end1);
+        Vector3 sparksPos = cursorMP.motionPath.PointOnNormalizedPath(end1);
         sparksObj.transform.position = sparksPos;
     }
 }
