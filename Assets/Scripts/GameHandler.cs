@@ -13,6 +13,7 @@ public class GameHandler : MonoBehaviour
     public List<ButtonClass> buttons;
     public KeyCode[] inputs;
     public bool debugMode = false;
+    public static float frameTime { get; private set; } = 1f / 60f;
 
     public int[] hits = new int[5];
 

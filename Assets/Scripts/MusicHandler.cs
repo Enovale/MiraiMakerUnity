@@ -127,10 +127,16 @@ public class MusicHandler : MonoBehaviour
         // Play the actual song
         source.clip = song;
         source.Play();
+        InvokeRepeating("MyUpdate", 0, GameHandler.frameTime);
+    }
+
+    private void Update()
+    {
+        print(1.0f / Time.unscaledDeltaTime);
     }
 
     // Update is called once per frame
-    void Update()
+    void MyUpdate()
     {
         //Debugging
         if (gameHandler.debugMode == true)
