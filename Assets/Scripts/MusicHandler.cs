@@ -130,11 +130,6 @@ public class MusicHandler : MonoBehaviour
         InvokeRepeating("MyUpdate", 0, GameHandler.frameTime);
     }
 
-    private void Update()
-    {
-        print(1.0f / Time.unscaledDeltaTime);
-    }
-
     // Update is called once per frame
     void MyUpdate()
     {
@@ -160,7 +155,7 @@ public class MusicHandler : MonoBehaviour
         if (nextIndex < notes.Length && notes[nextIndex].x < songPosInBeats + beatsInAdvance)
         {
             // Spawn it and initialize the fields of the music note
-            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, songPosInBeats + beatsInAdvance, nextIndex);
+            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, notes[nextIndex].x, nextIndex);
             gameHandler.buttons.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type], button.GetComponent<Button>()));
 
             nextIndex++;

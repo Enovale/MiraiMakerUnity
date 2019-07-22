@@ -157,6 +157,7 @@ MonoBehaviour:
   speed: 50
   loop: 1
   uv: 0
+  yesBe: 1
 --- !u!20 &59644902
 Camera:
   m_ObjectHideFlags: 0
@@ -549,6 +550,7 @@ MonoBehaviour:
   speed: 1
   loop: 1
   uv: 0.5
+  yesBe: 0
 --- !u!212 &477605859
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -658,6 +660,7 @@ MonoBehaviour:
   speed: 0
   loop: 1
   uv: 0
+  yesBe: 0
 --- !u!20 &519420031
 Camera:
   m_ObjectHideFlags: 0
@@ -899,6 +902,7 @@ MonoBehaviour:
   speed: 0
   loop: 1
   uv: 0
+  yesBe: 0
 --- !u!4 &1031007511
 Transform:
   m_ObjectHideFlags: 0

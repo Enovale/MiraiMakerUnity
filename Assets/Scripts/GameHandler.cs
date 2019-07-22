@@ -15,6 +15,14 @@ public class GameHandler : MonoBehaviour
     public bool debugMode = false;
     public static float frameTime { get; private set; } = 1f / 60f;
 
+    #region FPS
+    // For fps calculation.
+    private int frameCount;
+    private float elapsedTime;
+    [HideInInspector]
+    public double frameRate { get; private set; }
+    #endregion
+
     public int[] hits = new int[5];
 
     private MusicHandler musicHandler;
@@ -46,5 +54,16 @@ public class GameHandler : MonoBehaviour
                 LoadScene(2);
             }
         }
+
+        // FPS calculation
+        frameCount++;
+        elapsedTime += Time.unscaledDeltaTime;
+        if (elapsedTime > 0.5f)
+        {
+            frameRate = System.Math.Round(frameCount / elapsedTime, 1, System.MidpointRounding.AwayFromZero);
+            frameCount = 0;
+            elapsedTime = 0;
+        }
+        print(frameRate);
     }
 }

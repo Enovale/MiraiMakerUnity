@@ -89,7 +89,6 @@ public class Button : MonoBehaviour
         type = typein;
         index = indexin;
         btn = new ButtonClass(this.gameObject, gameHandler.inputs[type], buttonClass);
-        InvokeRepeating("MyUpdate", 0, GameHandler.frameTime);
     }
 
     /// <summary>
@@ -129,7 +128,7 @@ public class Button : MonoBehaviour
     }
 
     // Update is called once per frame
-    void MyUpdate()
+    void Update()
     {
         // If the button reaches the "fadeEnd" part of the path, kill it with a missed ranking
         if ((beat / musicHandler.lengthInBeats) <= musicHandler.fadeEnd)
@@ -143,7 +142,7 @@ public class Button : MonoBehaviour
             float pos = musicHandler.songPosInBeats;
             float bpm = musicHandler.bpm;
             // If you would have missed the previous note anyway, hit this one
-            if (gameHandler.buttons[index - 1].btn != null && GetRank(pos, bpm, gameHandler.buttons[index - 1].btnClass.beat) != 4)
+            if ((gameHandler.buttons.Count != 0 && index != 0) && gameHandler.buttons[index - 1].btn != null && GetRank(pos, bpm, gameHandler.buttons[index - 1].btnClass.beat) != 4)
             {
                 return;
             }
