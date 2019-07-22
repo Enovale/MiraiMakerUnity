@@ -50,8 +50,6 @@ public class Button : MonoBehaviour
     /// <param name="rate"></param>
     public void Hit(float songPosInBeats, float bpm, int rate)
     {
-
-        print("Did hit " + rate);
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(rate);
         Destroy(this.gameObject);
@@ -63,7 +61,6 @@ public class Button : MonoBehaviour
     /// </summary>
     public void Missed()
     {
-        print("Fucking missed idiot");
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(4);
         Destroy(this.gameObject);

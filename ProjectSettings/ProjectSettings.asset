@@ -585,6 +585,7 @@ PlayerSettings:
       daydreamIconForeground: {fileID: 0}
       daydreamIconBackground: {fileID: 0}
   cloudServicesEnabled:
+    Build: 1
     UNet: 1
   luminIcon:
     m_Name: 
@@ -605,10 +606,10 @@ PlayerSettings:
   facebookXfbml: 0
   facebookFrictionlessRequests: 1
   apiCompatibilityLevel: 6
-  cloudProjectId: 
+  cloudProjectId: 216e59ee-4162-457e-9415-2a6f93077c61
   framebufferDepthMemorylessMode: 0
-  projectName: 
-  organizationId: 
+  projectName: MiraiMakerUnity (1)
+  organizationId: elijahzawesome
   cloudEnabled: 0
   enableNativePlatformBackendsForNewInputSystem: 0
   disableOldInputManagerSupport: 0

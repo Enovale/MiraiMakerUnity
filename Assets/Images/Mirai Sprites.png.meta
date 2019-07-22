@@ -74,6 +74,33 @@ TextureImporter:
   - first:
       213: 8989679837231597688
     second: Sad Rank
+  - first:
+      213: -550729570160165689
+    second: BlueTap
+  - first:
+      213: -5807604723180500164
+    second: GreenSlideUp
+  - first:
+      213: -3781810278376292949
+    second: RedTapHold
+  - first:
+      213: 543242892986885002
+    second: BlueTapHold
+  - first:
+      213: 877840879097650131
+    second: YellowTapHold
+  - first:
+      213: -1816511507937362543
+    second: DownArrow
+  - first:
+      213: 3222876287585762764
+    second: LeftArrow
+  - first:
+      213: 632499599562080478
+    second: RightArrow
+  - first:
+      213: 5417575652441775194
+    second: UpArrow
   externalObjects: {}
   serializedVersion: 10
   mipmaps:
@@ -658,7 +685,7 @@ TextureImporter:
         width: 46
         height: 16
       alignment: 0
-      pivot: {x: 0, y: 0}
+      pivot: {x: 0.5, y: 0.5}
       border: {x: 0, y: 0, z: 0, w: 0}
       outline: []
       physicsShape: []
@@ -666,6 +693,195 @@ TextureImporter:
       bones: []
       spriteID: e85b1f85b7acb8243998ac81ba67b4bd
       internalID: 8989679837231597688
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BlueTap
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 1101
+        width: 44
+        height: 44
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: faee037eb08e2804eb0ca41fb362571c
+      internalID: -550729570160165689
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: GreenSlideUp
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 1352
+        width: 44
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 05cb98ba839382448af0bae55a376429
+      internalID: -5807604723180500164
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RedTapHold
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 1277
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: cd33ac3a9fc7ca24e8eb30c899f0b134
+      internalID: -3781810278376292949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: BlueTapHold
+      rect:
+        serializedVersion: 2
+        x: 693
+        y: 1225
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c6e19e4619216d24d998ad863dabef32
+      internalID: 543242892986885002
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: YellowTapHold
+      rect:
+        serializedVersion: 2
+        x: 641
+        y: 1213
+        width: 48
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 645676773b723b74994781dae4c698a0
+      internalID: 877840879097650131
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: DownArrow
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1332
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: d62fa8606049e4545a8081b3c524cec9
+      internalID: -1816511507937362543
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: LeftArrow
+      rect:
+        serializedVersion: 2
+        x: 584
+        y: 1332
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 1e0ededc68bb3ba44801c7c9dd213a80
+      internalID: 3222876287585762764
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: RightArrow
+      rect:
+        serializedVersion: 2
+        x: 548
+        y: 1296
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: 202cf47064ce567499aff4f1ca89a261
+      internalID: 632499599562080478
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: UpArrow
+      rect:
+        serializedVersion: 2
+        x: 512
+        y: 1260
+        width: 34
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      outline: []
+      physicsShape: []
+      tessellationDetail: 0
+      bones: []
+      spriteID: c8f8fedd337dd1543add66e0b048ac71
+      internalID: 5417575652441775194
       vertices: []
       indices: 
       edges: []

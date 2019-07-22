@@ -10,13 +10,16 @@ public class SpawnButtons : MonoBehaviour
     // Needs a reference to some game state vars
     public MotionPath path;
     public GameObject buttonPrefab;
+    private GameHandler gameHandler;
     // Prototype var, not needed?
     //public float UV = 0.5f;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Nothing yet
+        // Get reference to the Game Handler
+        GameHandler[] objects = FindObjectsOfType<GameHandler>();
+        gameHandler = objects[0];
     }
 
     // Update is called once per frame
@@ -36,6 +39,11 @@ public class SpawnButtons : MonoBehaviour
     public GameObject spawn(float uv, float type, float beat, int indexin)
     {
         GameObject button = Instantiate(buttonPrefab, new Vector3(path.PointOnNormalizedPath(uv).x, path.PointOnNormalizedPath(uv).y, buttonPrefab.transform.position.z), new Quaternion(0, 0, 0, 0));
+        // If type given does not exist, switch to Star(0)
+        if (Mathf.RoundToInt(type) >= gameHandler.types.Length)
+        {
+            type = 0;
+        }
         button.GetComponent<Button>().Init(Mathf.RoundToInt(type), beat, indexin);
         return button;
     }
