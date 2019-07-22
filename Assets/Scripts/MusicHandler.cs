@@ -155,7 +155,7 @@ public class MusicHandler : MonoBehaviour
         {
             // Spawn it and initialize the fields of the music note
             GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, songPosInBeats + beatsInAdvance, nextIndex);
-            gameHandler.buttons.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type]));
+            gameHandler.buttons.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type], button.GetComponent<Button>()));
 
             nextIndex++;
         }

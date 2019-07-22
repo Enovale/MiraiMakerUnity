@@ -151,3 +151,5 @@ MonoBehaviour:
   - {fileID: 8989679837231597688, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: -4069526271154166440, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   spriteObj: {fileID: 7660966156059082267}
+  spriteRend: {fileID: 7660966156059082264}
+  spriteAnim: {fileID: 7660966156059082265}

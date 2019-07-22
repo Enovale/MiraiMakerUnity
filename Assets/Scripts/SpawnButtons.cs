@@ -31,10 +31,10 @@ public class SpawnButtons : MonoBehaviour
     /// <summary>
     /// Spawns the button using a prefab and initiates it with the variables you give it. Also returns the button as a gameObject
     /// </summary>
-    /// <param name="uv"></param>
-    /// <param name="type"></param>
-    /// <param name="beat"></param>
-    /// <param name="indexin"></param>
+    /// <param name="uv">Percentage of the path</param>
+    /// <param name="type">Type of button</param>
+    /// <param name="beat">Beat of button</param>
+    /// <param name="indexin">Index of the button</param>
     /// <returns></returns>
     public GameObject spawn(float uv, float type, float beat, int indexin)
     {
@@ -44,7 +44,8 @@ public class SpawnButtons : MonoBehaviour
         {
             type = 0;
         }
-        button.GetComponent<Button>().Init(Mathf.RoundToInt(type), beat, indexin);
+        Button btnClass = button.GetComponent<Button>();
+        btnClass.Init(Mathf.RoundToInt(type), beat, indexin, btnClass);
         return button;
     }
 }

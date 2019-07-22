@@ -8,13 +8,15 @@ public class ButtonClass
 {
     public GameObject btn;
     public KeyCode key;
+    public Button btnClass;
 
-    public ButtonClass(GameObject button, KeyCode code)
+    public ButtonClass(GameObject button, KeyCode code, Button buttonClass)
     {
         // Button gameobject reference
         this.btn = button;
         // Keycode to hit button according to the input array
         this.key = code;
+        this.btnClass = buttonClass;
     }
 }
 
@@ -70,10 +72,10 @@ public class Button : MonoBehaviour
     /// <summary>
     /// Initiates the buttons defaults and sets any needed information
     /// </summary>
-    /// <param name="typein"></param>
-    /// <param name="curbeat"></param>
+    /// <param name="typein">Type of Button as an integer, see GameHandler</param>
+    /// <param name="curbeat">Current beat of the song</param>
     /// <param name="indexin"></param>
-    public void Init(int typein, float curbeat, int indexin)
+    public void Init(int typein, float curbeat, int indexin, Button buttonClass)
     {
         // Create button
         beat = curbeat;
@@ -86,15 +88,15 @@ public class Button : MonoBehaviour
         renderer.sprite = types[typein];
         type = typein;
         index = indexin;
-        btn = new ButtonClass(this.gameObject, gameHandler.inputs[type]);
+        btn = new ButtonClass(this.gameObject, gameHandler.inputs[type], buttonClass);
     }
 
     /// <summary>
     /// Determines what the current accuracy rating should be depending on the current state of the game.
     /// </summary>
-    /// <param name="pos"></param>
-    /// <param name="bpm"></param>
-    /// <param name="beat"></param>
+    /// <param name="pos">Current song position in beats</param>
+    /// <param name="bpm">Song Beats per Minute</param>
+    /// <param name="beat">Beat of the note in question</param>
     /// <returns></returns>
     private int GetRank(float pos, float bpm, float beat)
     {
@@ -140,7 +142,7 @@ public class Button : MonoBehaviour
             float pos = musicHandler.songPosInBeats;
             float bpm = musicHandler.bpm;
             // If you would have missed the previous note anyway, hit this one
-            if (gameHandler.buttons[index - 1].btn != null && GetRank(pos, bpm, gameHandler.buttons[index - 1].btn.GetComponent<Button>().beat) != 4)
+            if (gameHandler.buttons[index - 1].btn != null && GetRank(pos, bpm, gameHandler.buttons[index - 1].btnClass.beat) != 4)
             {
                 return;
             }

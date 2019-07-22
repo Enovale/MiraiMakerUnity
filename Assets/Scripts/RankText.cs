@@ -10,7 +10,8 @@ public class RankText : MonoBehaviour
     // Reference the sprite itself and other vars
     public Sprite[] rankSprites;
     public GameObject spriteObj;
-    private bool alive = true;
+    public SpriteRenderer spriteRend;
+    public Animator spriteAnim;
 
     // Start is called before the first frame update
     void Start()
@@ -21,25 +22,17 @@ public class RankText : MonoBehaviour
     /// <summary>
     /// Change sprite to match rank and start animation
     /// </summary>
-    /// <param name="rank"></param>
+    /// <param name="rank">Accuracy of the hit</param>
     public void Init(int rank)
     {
-        spriteObj.GetComponent<SpriteRenderer>().sprite = rankSprites[rank];
+        spriteRend.sprite = rankSprites[rank];
     }
 
     // Update is called once per frame
     void Update()
     {
         // If the animation finishes, kill the object to save memory
-        if (spriteObj.GetComponent<Animator>().GetCurrentAnimatorStateInfo(0).IsName("RankFloat"))
-        {
-            // Avoid any reload.
-            alive = true;
-        } else
-        {
-            alive = false;
-        }
-        if(alive == false)
+        if (!spriteAnim.GetCurrentAnimatorStateInfo(0).IsName("RankFloat"))
         {
             Destroy(this.gameObject);
         }
