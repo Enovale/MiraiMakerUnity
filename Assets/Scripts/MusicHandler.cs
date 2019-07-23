@@ -192,5 +192,21 @@ public class MusicHandler : MonoBehaviour
         // Move sparks to the tip of the line
         Vector3 sparksPos = cursorMP.motionPath.PointOnNormalizedPath(end1);
         sparksObj.transform.position = sparksPos;
+
+        // Determines whether or not the button is the next that should be being hit
+        foreach (ButtonClass button in gameHandler.buttons)
+        {
+            if (button.btn == null) continue;
+            Button btn = button.btnClass;
+            if ((gameHandler.buttons.Count != 0 && btn.index != 0) && btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) != 4)
+            {
+                btn.upNext = true;
+                break;
+            } else
+            {
+                btn.upNext = false;
+            }
+        }
+
     }
 }

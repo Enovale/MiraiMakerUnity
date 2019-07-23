@@ -42,7 +42,7 @@ public class CustomSongLoader : MonoBehaviour
 
     public void LoadLevelFromJSON()
     {
-        StreamReader reader = new StreamReader(filePath);
+        StreamReader reader = new StreamReader(Path.GetDirectoryName(Application.dataPath) + "/" + filePath);
         string json = reader.ReadToEnd();
         reader.Close();
         LevelClass level = JsonUtility.FromJson<LevelClass>(json);

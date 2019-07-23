@@ -28,6 +28,9 @@ public class Button : MonoBehaviour
     public float beat;
     // Which button in the list is this?
     public int index;
+
+    public bool upNext = false;
+
     // ButtonClass reference, shouldn't be used, but just in case
     public ButtonClass btn;
     // Reference to the rank text prefab
@@ -98,7 +101,7 @@ public class Button : MonoBehaviour
     /// <param name="bpm">Song Beats per Minute</param>
     /// <param name="beat">Beat of the note in question</param>
     /// <returns></returns>
-    private int GetRank(float pos, float bpm, float beat)
+    public int GetRank(float pos, float bpm, float beat)
     {
         // Cool Rank
         if ((pos <= beat && pos > beat - ((bpm / 60) / 5)) || (pos >= beat && pos < beat + ((bpm / 60) / 5)))
@@ -142,7 +145,7 @@ public class Button : MonoBehaviour
             float pos = musicHandler.songPosInBeats;
             float bpm = musicHandler.bpm;
             // If you would have missed the previous note anyway, hit this one
-            if ((gameHandler.buttons.Count != 0 && index != 0) && gameHandler.buttons[index - 1].btn != null && GetRank(pos, bpm, gameHandler.buttons[index - 1].btnClass.beat) != 4)
+            if (upNext == false)
             {
                 return;
             }
