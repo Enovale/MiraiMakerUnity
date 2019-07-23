@@ -11,6 +11,8 @@ public class MusicHandler : MonoBehaviour
     #region References
     // Many gameobject references and references to the song file
     public AudioClip song;
+    public string songPath;
+    public string levelName = "testLevel";
     public AudioSource source;
     public SpawnButtons buttonSpawner;
     public GameObject cursor;
@@ -90,9 +92,8 @@ public class MusicHandler : MonoBehaviour
     {
         source.time = length * sliderObj.GetComponent<Slider>().value;
     }
-
-    // Start is called before the first frame update
-    void Start()
+    
+    public void BeginGame()
     {
         #region Init References
         cameraMP = camera.GetComponent<FollowMotionPath>();

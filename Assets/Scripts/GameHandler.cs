@@ -9,10 +9,10 @@ using UnityEngine.SceneManagement;
 public class GameHandler : MonoBehaviour
 {
     // Mostly just stores objects right now.
+    public bool debugMode = false;
     public Sprite[] types;
     public List<ButtonClass> buttons;
     public KeyCode[] inputs;
-    public bool debugMode = false;
     public static float frameTime { get; private set; } = 1f / 60f;
 
     #region FPS
@@ -64,6 +64,5 @@ public class GameHandler : MonoBehaviour
             frameCount = 0;
             elapsedTime = 0;
         }
-        print(frameRate);
     }
 }
