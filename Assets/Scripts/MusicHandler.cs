@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityEngine.Video;
 
 /// <summary>
 /// This class manages the game's musical state, i.e spawning notes, cursor position, etc
@@ -11,7 +12,9 @@ public class MusicHandler : MonoBehaviour
     #region References
     // Many gameobject references and references to the song file
     public AudioClip song;
+    public VideoPlayer movie;
     public string songPath;
+    public string moviePath;
     public string levelName = "testLevel";
     public AudioSource source;
     public SpawnButtons buttonSpawner;
@@ -108,6 +111,8 @@ public class MusicHandler : MonoBehaviour
         gameHandler = objects[0];
         #endregion
 
+        movie.Prepare();
+
         // Spawn the debug slider if needed
         if (gameHandler.debugMode)
         {
@@ -128,7 +133,23 @@ public class MusicHandler : MonoBehaviour
         // Play the actual song
         source.clip = song;
         source.Play();
+
+        if(moviePath != "")
+        {
+            movie.url = moviePath;
+            movie.Play();
+        }
+
         InvokeRepeating("MyUpdate", 0, GameHandler.frameTime);
+    }
+
+    private void Update()
+    {
+        // Seek the movie (if it exists) to the part of the song we're at
+        if (moviePath != "" && movie.isPlaying)
+        {
+            movie.frame = (long)(movie.frameCount * (songPosition / length));
+        }
     }
 
     // Update is called once per frame

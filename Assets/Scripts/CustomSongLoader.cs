@@ -1,10 +1,7 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-using System;
+﻿using System;
+using System.Collections;
 using System.IO;
-using NAudio;
-using NAudio.Wave;
+using UnityEngine;
 using UnityEngine.Networking;
 
 [Serializable]
@@ -12,6 +9,7 @@ public class LevelClass
 {
     public string levelName;
     public string songPath;
+    public string moviePath;
     public float bpm;
     public float firstBeatOffset;
     public int beatsInAdvance;
@@ -56,8 +54,11 @@ public class CustomSongLoader : MonoBehaviour
         musicHandler.pathBeatsInAdvance = level.pathBeatsInAdvance;
         musicHandler.gamePath.GetComponent<MotionPath>().controlPoints = level.path;
         musicHandler.songPath = level.songPath;
-        string url = "";
+        string url = Path.GetDirectoryName(Application.dataPath) + "/";
+        string movieURL = url;
         url += level.songPath;
+        movieURL = "file:///" + movieURL + level.moviePath;
+        musicHandler.moviePath = movieURL;
         StartCoroutine(LoadAudio(url, Path.GetFileNameWithoutExtension(level.songPath)));
     }
 
@@ -66,7 +67,8 @@ public class CustomSongLoader : MonoBehaviour
         string furl = "file:///" + url;
         AudioType type;
         print(Path.GetExtension(url).ToLower());
-        switch(Path.GetExtension(url).ToLower()) {
+        switch (Path.GetExtension(url).ToLower())
+        {
             case ".mp3":
                 type = AudioType.MPEG;
                 break;
@@ -96,7 +98,13 @@ public class CustomSongLoader : MonoBehaviour
                 AudioClip ac;
                 switch (type)
                 {
-                    case AudioType.MPEG:
+                    case AudioType.MPEG:/*
+#if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
+                        ac = NAudioPlayer.FromMp3Data(www.downloadHandler.data);
+                        break;
+#else
+                        Debug.LogError("MP3 Playback only supported on windows at the moment. Please contact me if you know how to convert MP3 to WAV bytes universally in Unity.");
+#endif*/
                         ac = NAudioPlayer.FromMp3Data(www.downloadHandler.data);
                         break;
                     default:
@@ -130,6 +138,7 @@ public class CustomSongLoader : MonoBehaviour
         level.beatsInAdvance = musicHandler.beatsInAdvance;
         level.pathBeatsInAdvance = musicHandler.pathBeatsInAdvance;
         level.songPath = musicHandler.songPath;
+        level.moviePath = musicHandler.moviePath;
         level.path = musicHandler.gamePath.GetComponent<MotionPath>().controlPoints;
         string json = JsonUtility.ToJson(level);
         return json;

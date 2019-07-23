@@ -28,9 +28,8 @@ public class ResultsHandler : MonoBehaviour
         }
     }
 
-    // Update is called once per frame
-    void Update()
+    public void EndGame()
     {
-        
+        Application.Quit();
     }
 }

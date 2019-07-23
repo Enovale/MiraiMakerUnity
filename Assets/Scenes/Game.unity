@@ -189,7 +189,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 256
+    m_Bits: 257
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -301,6 +301,7 @@ Transform:
   - {fileID: 198991913}
   - {fileID: 112382357}
   - {fileID: 1489860508}
+  - {fileID: 1182318764}
   m_Father: {fileID: 0}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -405,7 +406,7 @@ GameObject:
   m_Component:
   - component: {fileID: 226444432}
   - component: {fileID: 226444431}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CursorSprite
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -484,7 +485,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 411122624}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Game
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -627,7 +628,7 @@ GameObject:
   - component: {fileID: 519420031}
   - component: {fileID: 519420029}
   - component: {fileID: 519420030}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Game Cam
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
@@ -693,7 +694,7 @@ Camera:
   m_Depth: 1
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 544
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -730,7 +731,7 @@ GameObject:
   - component: {fileID: 719853398}
   - component: {fileID: 719853400}
   - component: {fileID: 719853399}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Background
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -804,7 +805,7 @@ GameObject:
   - component: {fileID: 942558004}
   - component: {fileID: 942558006}
   - component: {fileID: 942558005}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -877,7 +878,7 @@ GameObject:
   m_Component:
   - component: {fileID: 972560036}
   - component: {fileID: 972560037}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: CustomSongLoader
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -922,7 +923,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1031007511}
   - component: {fileID: 1031007510}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Cursor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -976,7 +977,7 @@ GameObject:
   - component: {fileID: 1174464152}
   - component: {fileID: 1174464151}
   - component: {fileID: 1174464150}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Canvas
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1063,6 +1064,69 @@ Canvas:
   m_SortingLayerID: 0
   m_SortingOrder: 0
   m_TargetDisplay: 0
+--- !u!1 &1182318763
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1182318764}
+  - component: {fileID: 1182318765}
+  m_Layer: 0
+  m_Name: GameMovie
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1182318764
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182318763}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -5.581342, y: 1.5614278, z: -494.4421}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 163886493}
+  m_RootOrder: 5
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!328 &1182318765
+VideoPlayer:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1182318763}
+  m_Enabled: 1
+  m_VideoClip: {fileID: 0}
+  m_TargetCameraAlpha: 1
+  m_TargetCamera3DLayout: 0
+  m_TargetCamera: {fileID: 59644902}
+  m_TargetTexture: {fileID: 0}
+  m_TimeReference: 0
+  m_TargetMaterialRenderer: {fileID: 0}
+  m_TargetMaterialProperty: _MainTex
+  m_RenderMode: 0
+  m_AspectRatio: 1
+  m_DataSource: 1
+  m_PlaybackSpeed: 1
+  m_AudioOutputMode: 0
+  m_TargetAudioSources: []
+  m_DirectAudioVolumes: []
+  m_Url: 
+  m_EnabledAudioTracks: 
+  m_DirectAudioMutes: 
+  m_ControlledAudioTrackCount: 0
+  m_PlayOnAwake: 0
+  m_SkipOnDrop: 1
+  m_Looping: 1
+  m_WaitForFirstFrame: 0
+  m_FrameReadyEventEnabled: 0
 --- !u!1 &1232659865
 GameObject:
   m_ObjectHideFlags: 0
@@ -1073,7 +1137,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1232659866}
   - component: {fileID: 1232659867}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: GameHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1128,7 +1192,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1370737674}
   - component: {fileID: 1370737673}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Button Spawner
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1283,7 +1347,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1641938219}
   - component: {fileID: 1641938220}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Slider
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1436,7 +1500,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1839066310}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Handle Slide Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1473,7 +1537,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1890915198}
   - component: {fileID: 1890915197}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Camera Path
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1540,7 +1604,7 @@ GameObject:
   - component: {fileID: 2064718264}
   - component: {fileID: 2064718266}
   - component: {fileID: 2064718265}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: MusicHandler
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1573,7 +1637,7 @@ AudioSource:
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 0.1
+  m_Volume: 0.2
   m_Pitch: 1
   Loop: 0
   Mute: 0
@@ -1670,7 +1734,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   song: {fileID: 8300000, guid: 6d9c1e1ad255a364c99173800435ac9c, type: 3}
-  songPath: 
+  movie: {fileID: 1182318765}
+  songPath: /Assets/Music/Mirai/22. Ageage Again (Game Ver.).mp3
+  moviePath: Super Smash Bros. Ultimate Persona 5 Joker Fighter Reveal Trailer - The
+    Game Awards 2018.mp4
   levelName: testLevel
   source: {fileID: 2064718265}
   buttonSpawner: {fileID: 1370737673}
@@ -1747,7 +1814,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 2110409344}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Fill Area
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1784,7 +1851,7 @@ GameObject:
   m_Component:
   - component: {fileID: 2124337973}
   - component: {fileID: 2124337972}
-  m_Layer: 0
+  m_Layer: 9
   m_Name: Game Path
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -1855,7 +1922,7 @@ GameObject:
   - component: {fileID: 2126319715}
   - component: {fileID: 2126319717}
   - component: {fileID: 2126319716}
-  m_Layer: 5
+  m_Layer: 9
   m_Name: Handle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
