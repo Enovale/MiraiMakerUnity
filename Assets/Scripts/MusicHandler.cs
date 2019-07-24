@@ -21,10 +21,13 @@ public class MusicHandler : MonoBehaviour
     public GameObject cursor;
     public new GameObject camera;
     private FollowMotionPath cursorMP;
+    public Animator cursorAN;
     private FollowMotionPath cameraMP;
     public GameObject gamePath;
     private MotionPath gamePathMP;
     public GameObject sliderObj;
+
+    public bool cursorFlip = false;
 
     public GameObject sparksPrefab;
     private GameObject sparksObj;
@@ -54,6 +57,8 @@ public class MusicHandler : MonoBehaviour
     public float lengthInBeats;
     // Keep all the position-in-beats of notes in the song
     public Vector2[] notes;
+    // Two note tracks needed for multi-line segments
+    public Vector2[] notes2;
     // The index of the next note to be spawned
     [HideInInspector]
     public int nextIndex = 0;
@@ -89,6 +94,11 @@ public class MusicHandler : MonoBehaviour
         // You could use some other update rule here if you don't want linear interpolation
         float percent = startPercent + (endPercent - startPercent) * (songPosInBeats - cameraKeyframes[startInterval].x) / intervalBeatSize;
         return percent;
+    }
+
+    public void ExtendCursor()
+    {
+        cursorAN.SetTrigger("Extend");
     }
 
     public void MoveSlider()
@@ -183,13 +193,6 @@ public class MusicHandler : MonoBehaviour
             nextIndex++;
         }
 
-        // Move the cursor and camera respective to the current pos and keyframes
-        Vector3 cursorPos = cursorMP.motionPath.PointOnNormalizedPath(songPosInBeats / lengthInBeats);
-        cursor.transform.position = cursorPos;
-        float final = GetPathProgress();
-        Vector3 cameraPos = cameraMP.motionPath.PointOnNormalizedPath(final);
-        camera.transform.position = cameraPos;
-
         // Move debug slider to song positon
         if (gameHandler.debugMode)
         {
@@ -210,9 +213,27 @@ public class MusicHandler : MonoBehaviour
         gradient.mode = GradientMode.Blend;
         gamePathMP.line.GetComponent<LineRenderer>().colorGradient = gradient;
 
+        // Move the cursor and camera respective to the current pos and keyframes
+        Vector3 cursorPos = cursorMP.motionPath.PointOnNormalizedPath(songPosInBeats / lengthInBeats);
+        Vector3 cursorNorm = cursorMP.motionPath.NormalOnNormalizedPath(songPosInBeats / lengthInBeats);
+        cursor.transform.position = cursorPos;
+        if (cursorFlip == true)
+        {
+            cursor.transform.right = cursorNorm * -1;
+        } else
+        {
+            cursor.transform.right = cursorNorm;
+        }
+
+        float final = GetPathProgress();
+        Vector3 cameraPos = cameraMP.motionPath.PointOnNormalizedPath(final);
+        camera.transform.position = cameraPos;
+
         // Move sparks to the tip of the line
         Vector3 sparksPos = cursorMP.motionPath.PointOnNormalizedPath(end1);
+        Vector3 sparksNorm = cursorMP.motionPath.NormalOnNormalizedPath(end1);
         sparksObj.transform.position = sparksPos;
+        sparksObj.transform.right = sparksNorm;
 
         // Determines whether or not the button is the next that should be being hit
         foreach (ButtonClass button in gameHandler.buttons)
