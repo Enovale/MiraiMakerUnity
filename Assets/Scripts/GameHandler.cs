@@ -34,6 +34,20 @@ public class GameHandler : MonoBehaviour
         SceneManager.LoadScene(scene);
     }
 
+    public void ResetButtons()
+    {
+        foreach (ButtonClass btn in buttons)
+        {
+            Destroy(btn.btn);
+        }
+        foreach (ButtonClass btn in buttons2)
+        {
+            Destroy(btn.btn);
+        }
+        buttons.Clear();
+        buttons2.Clear();
+    }
+
     // Start is called before the first frame update
     void Start()
     {

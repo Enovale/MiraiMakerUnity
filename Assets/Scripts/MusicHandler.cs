@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.IO;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -123,15 +124,33 @@ public class MusicHandler : MonoBehaviour
         cursorMP = cursor.GetComponent<FollowMotionPath>();
         gamePathMP = gamePath.GetComponent<MotionPath>();
 
-        // Spawn the sparks on the end of the path
-        sparksObj = Instantiate(sparksPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
-
         // Get reference to the Game Handler
         GameHandler[] objects = FindObjectsOfType<GameHandler>();
         gameHandler = objects[0];
         #endregion
 
+        CancelInvoke("MyUpdate");
+
         movie.Prepare();
+
+        gameHandler.ResetButtons();
+
+        #region Clear Variables
+        source.Stop();
+        source.time = 0;
+        secPerBeat = 0;
+        lengthInBeats = 0;
+        length = 0;
+        dsptimesong = 0;
+        songPosInBeats = 0;
+        songPosition = 0;
+
+        if (sparksObj != null)
+        {
+            Destroy(sparksObj);
+        }
+
+        #endregion
 
         // Spawn the debug slider if needed
         if (gameHandler.debugMode)
@@ -156,9 +175,13 @@ public class MusicHandler : MonoBehaviour
 
         if(moviePath != "")
         {
+            moviePath = "file:///" + Path.GetDirectoryName(Application.dataPath) + "/" + moviePath;
             movie.url = moviePath;
             movie.Play();
         }
+        
+        // Spawn the sparks on the end of the path
+        sparksObj = Instantiate(sparksPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
 
         InvokeRepeating("MyUpdate", 0, GameHandler.frameTime);
     }

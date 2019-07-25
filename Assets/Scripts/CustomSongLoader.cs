@@ -3,6 +3,7 @@ using System.Collections;
 using System.IO;
 using UnityEngine;
 using UnityEngine.Networking;
+using UnityEngine.SceneManagement;
 
 [Serializable]
 public class LevelClass
@@ -15,7 +16,9 @@ public class LevelClass
     public int beatsInAdvance;
     public int pathBeatsInAdvance;
     public float fadeOffsetInBeats;
+    public float beatsBetweenExtend;
     public Vector2[] notes;
+    public Vector2[] notes2;
     public Vector2[] cameraKeyframes;
     public Vector3[] path;
 
@@ -34,7 +37,7 @@ public class CustomSongLoader : MonoBehaviour
     void Awake()
     {
         //WriteLevelToJSON();
-        LoadLevelFromJSON();
+        //LoadLevelFromJSON();
         print(Path.GetDirectoryName(Application.dataPath));
     }
 
@@ -47,9 +50,11 @@ public class CustomSongLoader : MonoBehaviour
         musicHandler.bpm = level.bpm;
         musicHandler.levelName = level.levelName;
         musicHandler.notes = level.notes;
+        musicHandler.notes2 = level.notes2;
         musicHandler.cameraKeyframes = level.cameraKeyframes;
         musicHandler.fadeOffsetInBeats = level.fadeOffsetInBeats;
         musicHandler.firstBeatOffset = level.firstBeatOffset;
+        musicHandler.beatsBetweenExtend = level.beatsBetweenExtend;
         musicHandler.beatsInAdvance = level.beatsInAdvance;
         musicHandler.pathBeatsInAdvance = level.pathBeatsInAdvance;
         musicHandler.gamePath.GetComponent<MotionPath>().controlPoints = level.path;
@@ -57,7 +62,7 @@ public class CustomSongLoader : MonoBehaviour
         string url = Path.GetDirectoryName(Application.dataPath) + "/";
         string movieURL = url;
         url += level.songPath;
-        movieURL = "file:///" + movieURL + level.moviePath;
+        movieURL = level.moviePath;
         musicHandler.moviePath = movieURL;
         StartCoroutine(LoadAudio(url, Path.GetFileNameWithoutExtension(level.songPath)));
     }
@@ -132,11 +137,13 @@ public class CustomSongLoader : MonoBehaviour
         level.levelName = musicHandler.levelName;
         level.bpm = musicHandler.bpm;
         level.notes = musicHandler.notes;
+        level.notes2 = musicHandler.notes2;
         level.cameraKeyframes = musicHandler.cameraKeyframes;
         level.firstBeatOffset = musicHandler.firstBeatOffset;
         level.fadeOffsetInBeats = musicHandler.fadeOffsetInBeats;
         level.beatsInAdvance = musicHandler.beatsInAdvance;
         level.pathBeatsInAdvance = musicHandler.pathBeatsInAdvance;
+        level.beatsBetweenExtend = musicHandler.beatsBetweenExtend;
         level.songPath = musicHandler.songPath;
         level.moviePath = musicHandler.moviePath;
         level.path = musicHandler.gamePath.GetComponent<MotionPath>().controlPoints;
