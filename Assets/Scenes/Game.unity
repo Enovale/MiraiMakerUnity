@@ -2430,7 +2430,7 @@ MonoBehaviour:
   paused: 0
   lengthInBeats: 0
   notes:
-  - {x: 0, y: 0}
+  - {x: 5, y: 0}
   - {x: 10, y: 1}
   - {x: 12, y: 2}
   - {x: 16, y: 3}

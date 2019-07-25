@@ -144,6 +144,8 @@ public class MusicHandler : MonoBehaviour
         dsptimesong = 0;
         songPosInBeats = 0;
         songPosition = 0;
+        nextIndex = 0;
+        nextIndex2 = 0;
 
         if (sparksObj != null)
         {
@@ -298,7 +300,7 @@ public class MusicHandler : MonoBehaviour
         {
             if (button.btn == null) continue;
             Button btn = button.btnClass;
-            if ((gameHandler.buttons.Count != 0 && btn.index != 0) && btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) != 4)
+            if ((gameHandler.buttons.Count != 0 && btn.index >= 0) && btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) != 4)
             {
                 btn.upNext = true;
                 break;
