@@ -1280,12 +1280,14 @@ MonoBehaviour:
   - {fileID: 6320126319961516777, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 3676818205159229461, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: -550729570160165689, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
-  - {fileID: 3676818205159229461, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
-  - {fileID: 3676818205159229461, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
-  - {fileID: 3676818205159229461, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
-  - {fileID: 3676818205159229461, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: 1083454802004553396, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: 406146498835816208, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: 1433376563282055704, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: -4999025007787600571, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   buttons: []
-  inputs: 20000000610000007300000064000000660000006700000068000000
+  buttons2: []
+  inputs: 200000006100000073000000640000006600000067000000680000006200000061000000730000006400000066000000
+  inputsAlt: 200000001301000012010000110100001401000061000000730000006400000066000000000000000000000000000000
   hits: 0000000000000000000000000000000000000000
 --- !u!1 &1370737672
 GameObject:
@@ -1319,6 +1321,8 @@ MonoBehaviour:
   path: {fileID: 2124337972}
   buttonPrefab: {fileID: 3166015888994354214, guid: 670246f37285d034aa3bcafeac2e8103,
     type: 3}
+  musicHandler: {fileID: 2064718266}
+  trackOffset: 2
 --- !u!4 &1370737674
 Transform:
   m_ObjectHideFlags: 0
@@ -1580,7 +1584,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.795, y: 0.032489587}
   m_AnchorMax: {x: 1, y: 0.14748955}
-  m_AnchoredPosition: {x: 0, y: -0.0025024}
+  m_AnchoredPosition: {x: 0, y: -0.0025024414}
   m_SizeDelta: {x: 0, y: 0.0049896}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1645241827
@@ -1856,7 +1860,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2064718263}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 2.56077, y: 3.416283, z: -29.541798}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 411122624}
@@ -1983,6 +1987,7 @@ MonoBehaviour:
   cursorAN: {fileID: 226444429}
   gamePath: {fileID: 2124337971}
   sliderObj: {fileID: 1641938218}
+  cursorFlip: 0
   sparksPrefab: {fileID: 8498035666364928821, guid: 6e89c9b535e8f4c4eb534c13347eb5a8,
     type: 3}
   songPosition: 0
@@ -1990,6 +1995,7 @@ MonoBehaviour:
   finished: 0
   secPerBeat: 0.34285715
   fadeOffsetInBeats: 5
+  beatsBetweenExtend: 8
   fadeEnd: -0.014708144
   dsptimesong: 0
   firstBeatOffset: 0.926
@@ -2039,8 +2045,18 @@ MonoBehaviour:
   - {x: 250, y: 3}
   - {x: 260, y: 2}
   - {x: 265, y: 0}
-  notes2: []
+  notes2:
+  - {x: 20, y: 1}
+  - {x: 25, y: 1}
+  - {x: 30, y: 10}
+  - {x: 35, y: 11}
+  - {x: 40, y: 1}
+  - {x: 45, y: 2}
+  - {x: 50, y: 3}
+  - {x: 55, y: 4}
+  - {x: 60, y: 5}
   nextIndex: 1
+  nextIndex2: 0
   cameraKeyframes:
   - {x: 0, y: 0}
   - {x: 256, y: 1}
@@ -2237,7 +2253,7 @@ GameObject:
   - component: {fileID: 2147008446}
   - component: {fileID: 2147008445}
   m_Layer: 8
-  m_Name: Cube
+  m_Name: Disgusting Fucking Cube
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2310,7 +2326,7 @@ Transform:
   m_GameObject: {fileID: 2147008444}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 10}
-  m_LocalScale: {x: 68.627266, y: 68.627266, z: 68.627266}
+  m_LocalScale: {x: 30, y: 30, z: 30}
   m_Children: []
   m_Father: {fileID: 163886493}
   m_RootOrder: 1

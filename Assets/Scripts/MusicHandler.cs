@@ -41,7 +41,11 @@ public class MusicHandler : MonoBehaviour
     // The duration of a beat
     [HideInInspector]
     public float secPerBeat;
+
     public float fadeOffsetInBeats;
+    // How many beats it takes until the cursor stops extending (or starts)
+    public float beatsBetweenExtend;
+
     [HideInInspector]
     public float fadeEnd;
     // How much time (in seconds) has passed since the song started
@@ -51,7 +55,7 @@ public class MusicHandler : MonoBehaviour
     public float firstBeatOffset;
     public int beatsInAdvance = 3;
     public int pathBeatsInAdvance = 6;
-    public float bpm = 205;
+    public float bpm = 120;
     public float length;
     public bool paused = false;
     public float lengthInBeats;
@@ -62,6 +66,11 @@ public class MusicHandler : MonoBehaviour
     // The index of the next note to be spawned
     [HideInInspector]
     public int nextIndex = 0;
+    [HideInInspector]
+    public int nextIndex2 = 0;
+
+    private bool cursorExtended = false;
+
     // Camera animation
     public Vector2[] cameraKeyframes;
     private GameHandler gameHandler;
@@ -98,6 +107,7 @@ public class MusicHandler : MonoBehaviour
 
     public void ExtendCursor()
     {
+        cursorExtended = !cursorExtended;
         cursorAN.SetTrigger("Extend");
     }
 
@@ -133,9 +143,9 @@ public class MusicHandler : MonoBehaviour
         // We will see the declaration of bpm later
         secPerBeat = 60f / bpm;
 
-        lengthInBeats = (bpm / 60) * song.length;
+        lengthInBeats = (bpm / 60) * (song.length - firstBeatOffset);
 
-        length = song.length;
+        length = song.length - firstBeatOffset;
 
         // Get the time that the song starts
         dsptimesong = (float)source.time;
@@ -183,14 +193,39 @@ public class MusicHandler : MonoBehaviour
         // Calculate the position in beats
         songPosInBeats = songPosition / secPerBeat;
 
+        // Handle extending the button if a second track button is coming up
+        if (nextIndex2 < notes2.Length && songPosInBeats >= (notes2[nextIndex2].x - beatsBetweenExtend) && !cursorExtended)
+        {
+            ExtendCursor();
+        }
+        else if (nextIndex2 < notes2.Length && songPosInBeats >= (notes2[nextIndex2].x + beatsBetweenExtend) && cursorExtended)
+        {
+            ExtendCursor();
+        }
+
+        if(nextIndex2 >= notes2.Length && songPosInBeats >= notes2[nextIndex2-1].x + beatsBetweenExtend && cursorExtended)
+        {
+            ExtendCursor();
+        }
+
         // If it's time to spawn the next note based on the beatsInAdvance, do so
         if (nextIndex < notes.Length && notes[nextIndex].x < songPosInBeats + beatsInAdvance)
         {
             // Spawn it and initialize the fields of the music note
-            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, notes[nextIndex].x, nextIndex);
-            gameHandler.buttons.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type], button.GetComponent<Button>()));
+            GameObject button = buttonSpawner.spawn(notes[nextIndex].x / lengthInBeats, notes[nextIndex].y, notes[nextIndex].x, nextIndex, 0);
+            gameHandler.buttons.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type], gameHandler.inputsAlt[button.GetComponent<Button>().type], button.GetComponent<Button>()));
 
             nextIndex++;
+        }
+
+        // Same as before but for the second note track
+        if (nextIndex2 < notes2.Length && notes2[nextIndex2].x < songPosInBeats + beatsInAdvance)
+        {
+            // Spawn it and initialize the fields of the music note
+            GameObject button = buttonSpawner.spawn(notes2[nextIndex2].x / lengthInBeats, notes2[nextIndex2].y, notes2[nextIndex2].x, nextIndex2, 1);
+            gameHandler.buttons2.Add(new ButtonClass(button, gameHandler.inputs[button.GetComponent<Button>().type], gameHandler.inputsAlt[button.GetComponent<Button>().type], button.GetComponent<Button>()));
+
+            nextIndex2++;
         }
 
         // Move debug slider to song positon
@@ -245,6 +280,22 @@ public class MusicHandler : MonoBehaviour
                 btn.upNext = true;
                 break;
             } else
+            {
+                btn.upNext = false;
+            }
+        }
+
+        // Same thing for track 2
+        foreach (ButtonClass button in gameHandler.buttons2)
+        {
+            if (button.btn == null) continue;
+            Button btn = button.btnClass;
+            if ((gameHandler.buttons2.Count != 0 && btn.index >= 0) && btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) != 4)
+            {
+                btn.upNext = true;
+                break;
+            }
+            else
             {
                 btn.upNext = false;
             }

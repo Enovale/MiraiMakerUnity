@@ -12,7 +12,9 @@ public class GameHandler : MonoBehaviour
     public bool debugMode = false;
     public Sprite[] types;
     public List<ButtonClass> buttons;
+    public List<ButtonClass> buttons2;
     public KeyCode[] inputs;
+    public KeyCode[] inputsAlt;
     public static float frameTime { get; private set; } = 1f / 60f;
 
     #region FPS
