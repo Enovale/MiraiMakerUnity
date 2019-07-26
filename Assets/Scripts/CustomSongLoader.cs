@@ -21,6 +21,7 @@ public class LevelClass
     public Vector2[] notes2;
     public Vector2[] cameraKeyframes;
     public Vector3[] path;
+    public Vector3[] camPath;
 
     public static LevelClass CreateFromJSON(string jsonString)
     {
@@ -58,6 +59,7 @@ public class CustomSongLoader : MonoBehaviour
         musicHandler.beatsInAdvance = level.beatsInAdvance;
         musicHandler.pathBeatsInAdvance = level.pathBeatsInAdvance;
         musicHandler.gamePath.GetComponent<MotionPath>().controlPoints = level.path;
+        musicHandler.cameraMP.controlPoints = level.camPath;
         musicHandler.songPath = level.songPath;
         string url = Path.GetDirectoryName(Application.dataPath) + "/";
         string movieURL = url;
@@ -147,7 +149,8 @@ public class CustomSongLoader : MonoBehaviour
         level.songPath = musicHandler.songPath;
         level.moviePath = musicHandler.moviePath;
         level.path = musicHandler.gamePath.GetComponent<MotionPath>().controlPoints;
-        string json = JsonUtility.ToJson(level);
+        level.camPath = musicHandler.cameraMP.controlPoints;
+        string json = JsonUtility.ToJson(level, true);
         return json;
     }
 }

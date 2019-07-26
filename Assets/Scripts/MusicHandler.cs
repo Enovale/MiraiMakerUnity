@@ -23,7 +23,7 @@ public class MusicHandler : MonoBehaviour
     public new GameObject camera;
     private FollowMotionPath cursorMP;
     public Animator cursorAN;
-    private FollowMotionPath cameraMP;
+    public MotionPath cameraMP;
     public GameObject gamePath;
     private MotionPath gamePathMP;
     public GameObject sliderObj;
@@ -120,7 +120,6 @@ public class MusicHandler : MonoBehaviour
     public void BeginGame()
     {
         #region Init References
-        cameraMP = camera.GetComponent<FollowMotionPath>();
         cursorMP = cursor.GetComponent<FollowMotionPath>();
         gamePathMP = gamePath.GetComponent<MotionPath>();
 
@@ -286,7 +285,7 @@ public class MusicHandler : MonoBehaviour
         }
 
         float final = GetPathProgress();
-        Vector3 cameraPos = cameraMP.motionPath.PointOnNormalizedPath(final);
+        Vector3 cameraPos = cameraMP.PointOnNormalizedPath(final);
         camera.transform.position = cameraPos;
 
         // Move sparks to the tip of the line

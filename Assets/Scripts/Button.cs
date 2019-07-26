@@ -133,17 +133,17 @@ public class Button : MonoBehaviour
             return 0;
         }
         // Fine rank
-        else if ((pos <= beat && pos > beat - ((bpm / 60) / 3)) || (pos >= beat && pos < beat + ((bpm / 60) / 3)))
+        else if ((pos <= beat && pos > beat - ((bpm / 60) / 4)) || (pos >= beat && pos < beat + ((bpm / 60) / 4)))
         {
             return 1;
         }
         // Safe rank
-        else if ((pos <= beat && pos > beat - ((bpm / 60) / 2)) || (pos >= beat && pos < beat + ((bpm / 60) / 2)))
+        else if ((pos <= beat && pos > beat - ((bpm / 60) / 3)) || (pos >= beat && pos < beat + ((bpm / 60) / 3)))
         {
             return 2;
         }
         // Sad Rank
-        else if ((pos <= beat && pos > beat - ((bpm / 60))) || (pos >= beat && pos < beat + ((bpm / 60))))
+        else if ((pos <= beat && pos > beat - ((bpm / 60) / 2)) || (pos >= beat && pos < beat + ((bpm / 60) / 2)))
         {
             return 3;
         }
@@ -218,21 +218,6 @@ public class Button : MonoBehaviour
         // If the designated key is hit
         if (Input.GetKeyDown(btn.key) || Input.GetKeyDown(btn.keyAlt))
         {
-            if(sus)
-            {
-                return;
-            }
-
-            if (track == 0 && upNextTrack2 == true)
-            {
-                print("killed");
-                return;
-            }
-            else if (track == 1 && upNextTrack1 == true)
-            {
-                print("killed2");
-                return;
-            }
             // If this button is the next button that should be hit, get the rank and hit it
             float pos = musicHandler.songPosInBeats;
             float bpm = musicHandler.bpm;
@@ -241,16 +226,51 @@ public class Button : MonoBehaviour
             {
                 return;
             }
-            Hit(pos, bpm, GetRank(pos, bpm, beat));
+            if (sus)
+            {
+                return;
+            }
+            if (pair != null)
+            {
+
+                if(pair.beat < beat && !pair.upNext)
+                {
+                    return;
+                }
+
+                if (GetRank(pos, bpm, beat) == 4)
+                {
+                    return;
+                }
+
+                if (!Input.GetKeyDown(pair.btn.key) || !Input.GetKeyDown(pair.btn.keyAlt) && !pair.upNext)
+                {
+                    Hit(pos, bpm, GetRank(pos, bpm, beat));
+                    return;
+                }
+                else if (Input.GetKeyDown(pair.btn.key) || Input.GetKeyDown(pair.btn.keyAlt) && pair.upNext)
+                {
+                    Hit(pos, bpm, GetRank(pos, bpm, beat));
+                    pair.Hit(pos, bpm, GetRank(pos, bpm, pair.beat));
+                    return;
+                }
+            }
+            else
+            {
+                Hit(pos, bpm, GetRank(pos, bpm, beat));
+                return;
+            }
+            //Hit(pos, bpm, GetRank(pos, bpm, beat));
         }
-        if(Input.GetKey(btn.key) || Input.GetKey(btn.keyAlt))
+        if (Input.GetKey(btn.key) || Input.GetKey(btn.keyAlt))
         {
-            if(!sus)
+            if (!sus)
             {
                 return;
             }
             holdingSus = true;
-        } else
+        }
+        else
         {
             if (!sus)
             {

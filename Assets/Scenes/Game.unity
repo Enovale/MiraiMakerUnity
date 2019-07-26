@@ -172,7 +172,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1633,7 +1633,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2024,7 +2024,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2409,6 +2409,7 @@ MonoBehaviour:
   cursor: {fileID: 1031007509}
   camera: {fileID: 519420028}
   cursorAN: {fileID: 226444429}
+  cameraMP: {fileID: 1890915197}
   gamePath: {fileID: 2124337971}
   sliderObj: {fileID: 1641938218}
   cursorFlip: 0
@@ -2470,8 +2471,8 @@ MonoBehaviour:
   - {x: 260, y: 2}
   - {x: 265, y: 0}
   notes2:
-  - {x: 20, y: 1}
-  - {x: 25, y: 1}
+  - {x: 13, y: 1}
+  - {x: 15, y: 1}
   - {x: 30, y: 10}
   - {x: 35, y: 11}
   - {x: 40, y: 1}
@@ -2770,7 +2771,7 @@ PrefabInstance:
     - target: {fileID: 7660966156831988746, guid: 26b506de508be74488442183f10b3df6,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7660966156831988744, guid: 26b506de508be74488442183f10b3df6,
         type: 3}
