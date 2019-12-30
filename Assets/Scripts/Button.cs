@@ -24,20 +24,32 @@ public class ButtonClass
 
 public class Button : MonoBehaviour
 {
-    // Which button it is
+    /// <summary>
+    /// What kind of button is this?
+    /// </summary>
     public int type;
 
-    // Which track its on
+    /// <summary>
+    /// Which of the two tracks this button is on; 0 = first, 1 = second
+    /// </summary>
     public int track = 0;
 
-    // The beat that this button resides on
+    /// <summary>
+    /// Which beat this button plays on
+    /// </summary>
     public float beat;
-    // Which button in the list is this?
+
+    /// <summary>
+    /// Where in the button list is this
+    /// </summary>
     public int index;
 
     // Range which are sustain notes
     public static int[] susRange = { 8, 12 };
 
+    /// <summary>
+    /// Is this note the next note to play?
+    /// </summary>
     public bool upNext = false;
     // Sustain note
     public bool sus = false;
@@ -74,12 +86,12 @@ public class Button : MonoBehaviour
     /// <param name="songPosInBeats">Position in the song in beats</param>
     /// <param name="bpm">Beats per Minute of the song</param>
     /// <param name="rate">Accuracy rating of the hit</param>
-    public void Hit(float songPosInBeats, float bpm, int rate)
+    public void Hit(float songPosInBeats, float bpm, GameHandler.Rank rate)
     {
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(rate);
         Destroy(this.gameObject);
-        gameHandler.hits[rate]++;
+        gameHandler.hits[(int)rate]++;
     }
 
     /// <summary>
@@ -88,7 +100,7 @@ public class Button : MonoBehaviour
     public void Missed()
     {
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
-        rankText.GetComponent<RankText>().Init(4);
+        rankText.GetComponent<RankText>().Init(GameHandler.Rank.Missed);
         Destroy(this.gameObject);
         gameHandler.hits[4]++;
     }
@@ -125,32 +137,27 @@ public class Button : MonoBehaviour
     /// <param name="bpm">Song Beats per Minute</param>
     /// <param name="beat">Beat of the note in question</param>
     /// <returns>The rank index</returns>
-    public int GetRank(float pos, float bpm, float beat)
+    public GameHandler.Rank GetRank(float pos, float bpm, float beat)
     {
-        // Cool Rank
         if ((pos <= beat && pos > beat - ((bpm / 60) / 5)) || (pos >= beat && pos < beat + ((bpm / 60) / 5)))
         {
-            return 0;
+            return GameHandler.Rank.Cool;
         }
-        // Fine rank
         else if ((pos <= beat && pos > beat - ((bpm / 60) / 4)) || (pos >= beat && pos < beat + ((bpm / 60) / 4)))
         {
-            return 1;
+            return GameHandler.Rank.Fine;
         }
-        // Safe rank
         else if ((pos <= beat && pos > beat - ((bpm / 60) / 3)) || (pos >= beat && pos < beat + ((bpm / 60) / 3)))
         {
-            return 2;
+            return GameHandler.Rank.Safe;
         }
-        // Sad Rank
         else if ((pos <= beat && pos > beat - ((bpm / 60) / 2)) || (pos >= beat && pos < beat + ((bpm / 60) / 2)))
         {
-            return 3;
+            return GameHandler.Rank.Sad;
         }
-        // Missed
         else
         {
-            return 4;
+            return GameHandler.Rank.Missed;
         }
     }
 
@@ -164,119 +171,30 @@ public class Button : MonoBehaviour
             Missed();
         }
 
-        bool upNextTrack2 = false;
-
         // Prototype code; FUTURE ME, PLEASE OPTIMIZE
         foreach (ButtonClass altBtn in gameHandler.buttons2)
         {
-            if (altBtn.btnClass.upNext == true && GetRank(altBtn.btnClass.beat, musicHandler.bpm, beat) != 4)
+            if (altBtn.btnClass.upNext == true && GetRank(altBtn.btnClass.beat, musicHandler.bpm, beat) != GameHandler.Rank.Missed)
             {
                 if (track == 0)
                 {
                     pair = altBtn.btnClass;
                 }
-                upNextTrack2 = true;
                 break;
             }
         }
-
-        bool upNextTrack1 = false;
-
+;
         // Prototype code; FUTURE ME, PLEASE OPTIMIZE
-        foreach (ButtonClass altBtn in gameHandler.buttons)
+        foreach (ButtonClass btn in gameHandler.buttons)
         {
-            if (altBtn.btnClass.upNext == true && GetRank(altBtn.btnClass.beat, musicHandler.bpm, beat) != 4)
+            if (btn.btnClass.upNext == true && GetRank(btn.btnClass.beat, musicHandler.bpm, beat) != GameHandler.Rank.Missed)
             {
                 if (track == 1)
                 {
-                    pair = altBtn.btnClass;
+                    pair = btn.btnClass;
                 }
-                upNextTrack1 = true;
                 break;
             }
-        }
-
-        // connectedClients.Find(i => i.endPoint.ToString() == e.RemoteEndPoint.ToString());
-
-        KeyCode pressedKey;
-
-        // Prototype code; FUTURE ME, PLEASE OPTIMIZE IF POSSIBLE
-        int i = 0;
-        foreach (KeyCode kcode in gameHandler.inputs)
-        {
-            if (Input.GetKeyDown(kcode))
-            {
-                pressedKey = kcode;
-                if (upNextTrack2 == false && kcode != btn.key && kcode != btn.keyAlt && GetRank(musicHandler.songPosInBeats, musicHandler.bpm, beat) != 4 && upNext == true)
-                {
-                    Missed();
-                }
-            }
-            i++;
-        }
-
-        // If the designated key is hit
-        if (Input.GetKeyDown(btn.key) || Input.GetKeyDown(btn.keyAlt))
-        {
-            // If this button is the next button that should be hit, get the rank and hit it
-            float pos = musicHandler.songPosInBeats;
-            float bpm = musicHandler.bpm;
-            // If you would have missed the previous note anyway, hit this one
-            if (upNext == false)
-            {
-                return;
-            }
-            if (sus)
-            {
-                return;
-            }
-            if (pair != null)
-            {
-
-                if(pair.beat < beat && !pair.upNext)
-                {
-                    return;
-                }
-
-                if (GetRank(pos, bpm, beat) == 4)
-                {
-                    return;
-                }
-
-                if (!Input.GetKeyDown(pair.btn.key) || !Input.GetKeyDown(pair.btn.keyAlt) && !pair.upNext)
-                {
-                    Hit(pos, bpm, GetRank(pos, bpm, beat));
-                    return;
-                }
-                else if (Input.GetKeyDown(pair.btn.key) || Input.GetKeyDown(pair.btn.keyAlt) && pair.upNext)
-                {
-                    Hit(pos, bpm, GetRank(pos, bpm, beat));
-                    pair.Hit(pos, bpm, GetRank(pos, bpm, pair.beat));
-                    return;
-                }
-            }
-            else
-            {
-                Hit(pos, bpm, GetRank(pos, bpm, beat));
-                return;
-            }
-            //Hit(pos, bpm, GetRank(pos, bpm, beat));
-        }
-        if (Input.GetKey(btn.key) || Input.GetKey(btn.keyAlt))
-        {
-            if (!sus)
-            {
-                return;
-            }
-            holdingSus = true;
-        }
-        else
-        {
-            if (!sus)
-            {
-                return;
-            }
-            holdingSus = false;
         }
     }
 }

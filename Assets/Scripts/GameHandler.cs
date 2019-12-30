@@ -9,26 +9,56 @@ using UnityEngine.SceneManagement;
 public class GameHandler : MonoBehaviour
 {
     // Mostly just stores objects right now.
+    /// <summary>
+    /// Enables a song position slider and seeing certain information in the console.
+    /// </summary>
     public bool debugMode = false;
     public Sprite[] types;
     public List<ButtonClass> buttons;
     public List<ButtonClass> buttons2;
     public KeyCode[] inputs;
     public KeyCode[] inputsAlt;
-    public static float frameTime { get; private set; } = 1f / 60f;
+
+    public static int FrameRate = 60;
+    /// <summary>
+    /// How long between each frame, because game logic doesn't need to be called every frame
+    /// Calling update each frame will massively slow down the game because the faster the rendering
+    /// the more times update gets called, and Update is pretty hefty
+    /// </summary>
+    public static float FrameTime { get {
+            return 1f / FrameRate;
+        }
+        private set { }
+    }
 
     #region FPS
     // For fps calculation.
     private int frameCount;
     private float elapsedTime;
+    /// <summary>
+    /// The framerate of the renderer (not related to the game logic framerate)
+    /// </summary>
     [HideInInspector]
-    public double frameRate { get; private set; }
+    public double runningFrameRate { get; private set; }
     #endregion
 
     public int[] hits = new int[5];
 
     private MusicHandler musicHandler;
 
+    public enum Rank
+    {
+        Cool = 0,
+        Fine = 1,
+        Safe = 2,
+        Sad = 3,
+        Missed = 4,
+    }
+
+    /// <summary>
+    /// Simply a wrapper for the SceneManager loadscene
+    /// </summary>
+    /// <param name="scene">The scene index to load</param>
     private void LoadScene(int scene)
     {
         SceneManager.LoadScene(scene);
@@ -76,7 +106,7 @@ public class GameHandler : MonoBehaviour
         elapsedTime += Time.unscaledDeltaTime;
         if (elapsedTime > 0.5f)
         {
-            frameRate = System.Math.Round(frameCount / elapsedTime, 1, System.MidpointRounding.AwayFromZero);
+            runningFrameRate = System.Math.Round(frameCount / elapsedTime, 1, System.MidpointRounding.AwayFromZero);
             frameCount = 0;
             elapsedTime = 0;
         }

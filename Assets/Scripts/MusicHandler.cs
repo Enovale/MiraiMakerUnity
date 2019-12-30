@@ -54,8 +54,8 @@ public class MusicHandler : MonoBehaviour
     public float dsptimesong;
     // The offset to the first beat of the song in seconds
     public float firstBeatOffset;
-    public int beatsInAdvance = 3;
-    public int pathBeatsInAdvance = 6;
+    public int beatsInAdvance = 5;
+    public int pathBeatsInAdvance = 10;
     public float bpm = 120;
     public float length;
     public bool paused = false;
@@ -70,6 +70,15 @@ public class MusicHandler : MonoBehaviour
     [HideInInspector]
     public int nextIndex2 = 0;
 
+    /// <summary>
+    /// The button on the first line that has UpNext
+    /// </summary>
+    public Button FirstLineNextButton = null;
+    /// <summary>
+    /// The button on the second line that has UpNext
+    /// </summary>
+    public Button SecondLineNextButton = null;
+
     private bool cursorExtended = false;
 
     // Camera animation
@@ -81,7 +90,7 @@ public class MusicHandler : MonoBehaviour
     /// Gets the position of the camera on it's path depending on the keyframes provided
     /// </summary>
     /// <returns></returns>
-    float GetPathProgress()
+    public float GetCamPathProgress()
     {
         // Assumed Beat Map has atleast 2 elements. TODO: correct error handling
         int startInterval = 0;
@@ -106,6 +115,9 @@ public class MusicHandler : MonoBehaviour
         return percent;
     }
 
+    /// <summary>
+    /// Causes the cursor animator to extend for hitting second line notes (purely visual)
+    /// </summary>
     public void ExtendCursor()
     {
         cursorExtended = !cursorExtended;
@@ -116,7 +128,44 @@ public class MusicHandler : MonoBehaviour
     {
         source.time = length * sliderObj.GetComponent<Slider>().value;
     }
-    
+
+    /// <summary>
+    /// Returns the closest note out of both lines, if they are both the same beat, returns null
+    /// </summary>
+    public Button GetClosestNote()
+    {
+        if (FirstLineNextButton == null || SecondLineNextButton == null) return FirstLineNextButton ?? SecondLineNextButton;
+        if (FirstLineNextButton.beat > SecondLineNextButton.beat)
+        {
+            return SecondLineNextButton;
+        }
+        else if (FirstLineNextButton.beat < SecondLineNextButton.beat)
+        {
+            return FirstLineNextButton;
+        }
+        else
+        {
+            return null;
+        }
+    }
+
+    /// <summary>
+    /// Are the closest notes on both lines the same beat?
+    /// </summary>
+    /// <returns></returns>
+    public bool ClosestNotesAreTheSame()
+    {
+        if (FirstLineNextButton == null || SecondLineNextButton == null) return false;
+        if (FirstLineNextButton.beat == SecondLineNextButton.beat)
+        {
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+
     public void BeginGame()
     {
         #region Init References
@@ -174,30 +223,58 @@ public class MusicHandler : MonoBehaviour
         source.clip = song;
         source.Play();
 
-        if(moviePath != "")
+        if (moviePath != "")
         {
             moviePath = "file:///" + Path.GetDirectoryName(Application.dataPath) + "/" + moviePath;
             movie.url = moviePath;
             movie.Play();
+            movie.playbackSpeed = 1; // Evenetually the user will select this
         }
-        
+
         // Spawn the sparks on the end of the path
         sparksObj = Instantiate(sparksPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
 
-        InvokeRepeating("MyUpdate", 0, GameHandler.frameTime);
+        InvokeRepeating("MyUpdate", 0, GameHandler.FrameTime); // Only run update a set amount of times per second
     }
 
     private void Update()
     {
         // Seek the movie (if it exists) to the part of the song we're at
+        /*
         if (moviePath != "" && movie.isPlaying)
         {
             movie.frame = (long)(movie.frameCount * (songPosition / length));
         }
+        */
+    }
+
+    /// <summary>
+    /// Updates the lineRenderer's gradient so it fades away as the song progresses.
+    /// Also updates the sparks on the line tip
+    /// </summary>
+    private void UpdateLineVisuals()
+    {
+        Gradient gradient = new Gradient();
+        float gradient1 = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats) - (bpm / 60) * 0.01f);
+        fadeEnd = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats));
+        float end1 = (songPosInBeats + pathBeatsInAdvance) / lengthInBeats;
+        float end2 = end1;
+        gradient.SetKeys(
+            new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) },
+            new GradientAlphaKey[] { new GradientAlphaKey(0, gradient1), new GradientAlphaKey(1, fadeEnd), new GradientAlphaKey(1, end1), new GradientAlphaKey(0, end2), new GradientAlphaKey(0, 1.0f) }
+        );
+        gradient.mode = GradientMode.Blend;
+        gamePathMP.line.GetComponent<LineRenderer>().colorGradient = gradient;
+
+        // Move sparks to the tip of the line
+        Vector3 sparksPos = cursorMP.motionPath.PointOnNormalizedPath(end1);
+        Vector3 sparksNorm = cursorMP.motionPath.NormalOnNormalizedPath(end1);
+        sparksObj.transform.position = sparksPos;
+        sparksObj.transform.right = sparksNorm;
     }
 
     // Update is called once per frame
-    void MyUpdate()
+    private void MyUpdate()
     {
         //Debugging
         if (gameHandler.debugMode == true)
@@ -227,7 +304,7 @@ public class MusicHandler : MonoBehaviour
             ExtendCursor();
         }
 
-        if(nextIndex2 >= notes2.Length && songPosInBeats >= notes2[nextIndex2-1].x + beatsBetweenExtend && cursorExtended)
+        if (nextIndex2 >= notes2.Length && songPosInBeats >= notes2[nextIndex2 - 1].x + beatsBetweenExtend && cursorExtended)
         {
             ExtendCursor();
         }
@@ -260,50 +337,42 @@ public class MusicHandler : MonoBehaviour
         }
 
         // Fadeout line after passing
-        Gradient gradient = new Gradient();
-        float gradient1 = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats) - (bpm / 60) * 0.01f);
-        fadeEnd = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats));
-        float end1 = (songPosInBeats + pathBeatsInAdvance) / lengthInBeats;
-        float end2 = end1;
-        gradient.SetKeys(
-            new GradientColorKey[] { new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f) },
-            new GradientAlphaKey[] { new GradientAlphaKey(0, gradient1), new GradientAlphaKey(1, fadeEnd), new GradientAlphaKey(1, end1), new GradientAlphaKey(0, end2), new GradientAlphaKey(0, 1.0f) }
-        );
-        gradient.mode = GradientMode.Blend;
-        gamePathMP.line.GetComponent<LineRenderer>().colorGradient = gradient;
+        UpdateLineVisuals();
 
         // Move the cursor and camera respective to the current pos and keyframes
         Vector3 cursorPos = cursorMP.motionPath.PointOnNormalizedPath(songPosInBeats / lengthInBeats);
         Vector3 cursorNorm = cursorMP.motionPath.NormalOnNormalizedPath(songPosInBeats / lengthInBeats);
         cursor.transform.position = cursorPos;
-        if (cursorFlip == true)
+        if (cursorFlip == true) // Frankly i'm not sure why this is ever flipped, need to read code
         {
             cursor.transform.right = cursorNorm * -1;
-        } else
+        }
+        else
         {
             cursor.transform.right = cursorNorm;
         }
 
-        float final = GetPathProgress();
+        float final = GetCamPathProgress();
         Vector3 cameraPos = cameraMP.PointOnNormalizedPath(final);
         camera.transform.position = cameraPos;
-
-        // Move sparks to the tip of the line
-        Vector3 sparksPos = cursorMP.motionPath.PointOnNormalizedPath(end1);
-        Vector3 sparksNorm = cursorMP.motionPath.NormalOnNormalizedPath(end1);
-        sparksObj.transform.position = sparksPos;
-        sparksObj.transform.right = sparksNorm;
 
         // Determines whether or not the button is the next that should be being hit
         foreach (ButtonClass button in gameHandler.buttons)
         {
             if (button.btn == null) continue;
             Button btn = button.btnClass;
-            if ((gameHandler.buttons.Count != 0 && btn.index >= 0) && btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) != 4)
+            if (btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) == GameHandler.Rank.Missed && btn.beat < songPosInBeats)
+            {
+                btn.upNext = false;
+                //return;
+            }
+            else if ((gameHandler.buttons.Count != 0 && btn.index >= 0))
             {
                 btn.upNext = true;
+                FirstLineNextButton = btn;
                 break;
-            } else
+            }
+            else
             {
                 btn.upNext = false;
             }
@@ -314,9 +383,15 @@ public class MusicHandler : MonoBehaviour
         {
             if (button.btn == null) continue;
             Button btn = button.btnClass;
-            if ((gameHandler.buttons2.Count != 0 && btn.index >= 0) && btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) != 4)
+            if (btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) == GameHandler.Rank.Missed && btn.beat < songPosInBeats)
+            {
+                btn.upNext = false;
+                //return;
+            }
+            else if ((gameHandler.buttons2.Count != 0 && btn.index >= 0))
             {
                 btn.upNext = true;
+                SecondLineNextButton = btn;
                 break;
             }
             else
@@ -324,6 +399,23 @@ public class MusicHandler : MonoBehaviour
                 btn.upNext = false;
             }
         }
+
+        // TODO
+        // Get farther btn of the two, if they are the same type of button, turn off the button
+        /*if(FirstLineNextButton != null && SecondLineNextButton != null)
+        {
+            if(FirstLineNextButton.type == SecondLineNextButton.type)
+            {
+                if(FirstLineNextButton.beat >= SecondLineNextButton.beat) // Greater than or equal so you have to hit each twice
+                {
+                    FirstLineNextButton.upNext = false; // First line button is farther
+                } 
+                else if(SecondLineNextButton.beat > FirstLineNextButton.beat)
+                {
+                    SecondLineNextButton.upNext = false; // Second line button is farther
+                }
+            }
+        }*/
 
     }
 }

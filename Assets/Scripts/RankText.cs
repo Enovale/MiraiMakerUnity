@@ -23,9 +23,9 @@ public class RankText : MonoBehaviour
     /// Change sprite to match rank and start animation
     /// </summary>
     /// <param name="rank">Accuracy of the hit</param>
-    public void Init(int rank)
+    public void Init(GameHandler.Rank rank)
     {
-        spriteRend.sprite = rankSprites[rank];
+        spriteRend.sprite = rankSprites[(int)rank];
     }
 
     // Update is called once per frame
