@@ -40,7 +40,7 @@ public class SpawnButtons : MonoBehaviour
         {
             button.transform.up = path.NormalOnNormalizedPath(uv);
             Vector3 offset = transform.right * (trackOffset * -1);
-            if(musicHandler.cursorFlip)
+            if(gameHandler.cursorFlipped)
             {
                 offset = transform.right * (trackOffset * 1);
             }
@@ -48,7 +48,7 @@ public class SpawnButtons : MonoBehaviour
             button.transform.eulerAngles = new Vector3(0, 0, 0);
         }
         // If type given does not exist, switch to Star(0)
-        if (Mathf.RoundToInt(type) >= gameHandler.types.Length)
+        if (Mathf.RoundToInt(type) >= gameHandler.NoteTypes.Length)
         {
             type = 0;
         }

@@ -23,7 +23,7 @@ public class ResultsHandler : MonoBehaviour
         // Fill in the rank amounts
         foreach(Text text in amountList)
         {
-            text.text = gameHandler.hits[i].ToString();
+            text.text = gameHandler.NoteHitCounter[i].ToString();
             i++;
         }
     }

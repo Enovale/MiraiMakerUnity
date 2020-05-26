@@ -1601,8 +1601,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c89dc2ab11c3040a02d70c13a2f9b8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  debugMode: 1
-  types:
+  DebugMode: 1
+  NoteTypes:
   - {fileID: -4248158342566419317, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 8588203227437221607, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 3072997428091073445, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
@@ -1615,11 +1615,11 @@ MonoBehaviour:
   - {fileID: 406146498835816208, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 1433376563282055704, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: -4999025007787600571, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
-  buttons: []
-  buttons2: []
-  inputs: 200000006100000073000000640000006600000067000000680000006200000061000000730000006400000066000000
-  inputsAlt: 000000001301000012010000110100001401000061000000730000006400000066000000000000000000000000000000
-  hits: 0000000000000000000000000000000000000000
+  SongButtons: []
+  SongButtons2: []
+  NoteInputs: 200000006100000073000000640000006600000067000000680000006200000061000000730000006400000066000000
+  NoteInputsAlt: 000000001301000012010000110100001401000061000000730000006400000066000000000000000000000000000000
+  NoteHitCounter: 0000000000000000000000000000000000000000
 --- !u!1 &1326033567
 GameObject:
   m_ObjectHideFlags: 0
@@ -2428,39 +2428,38 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b23300672b9dda40b2969bb8c44f5a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  song: {fileID: 8300000, guid: 6d9c1e1ad255a364c99173800435ac9c, type: 3}
-  movie: {fileID: 1182318765}
-  songPath: /Assets/Music/Mirai/22. Ageage Again (Game Ver.).mp3
-  moviePath: /Assets/Movies/Super Smash Bros. Ultimate Persona 5 Joker Fighter Reveal
+  SongClip: {fileID: 8300000, guid: 6d9c1e1ad255a364c99173800435ac9c, type: 3}
+  MovieClip: {fileID: 1182318765}
+  SongPath: /Assets/Music/Mirai/22. Ageage Again (Game Ver.).mp3
+  MoviePath: /Assets/Movies/Super Smash Bros. Ultimate Persona 5 Joker Fighter Reveal
     Trailer - The Game Awards 2018.mp4
-  levelName: testLevel
-  source: {fileID: 2064718265}
-  buttonSpawner: {fileID: 1370737673}
-  cursor: {fileID: 1031007509}
-  camera: {fileID: 519420028}
-  cursorAN: {fileID: 226444429}
-  cameraMP: {fileID: 1890915197}
-  gamePath: {fileID: 2124337971}
-  sliderObj: {fileID: 1641938218}
-  cursorFlip: 0
-  sparksPrefab: {fileID: 8498035666364928821, guid: 6e89c9b535e8f4c4eb534c13347eb5a8,
+  LevelName: testLevel
+  MyAS: {fileID: 2064718265}
+  ButtonSpawner: {fileID: 1370737673}
+  CursorObj: {fileID: 1031007509}
+  GameCamera: {fileID: 519420028}
+  CursorAN: {fileID: 226444429}
+  CameraMP: {fileID: 1890915197}
+  GamePath: {fileID: 2124337971}
+  SliderObj: {fileID: 1641938218}
+  SparksPrefab: {fileID: 8498035666364928821, guid: 6e89c9b535e8f4c4eb534c13347eb5a8,
     type: 3}
-  songPosition: 0
-  songPosInBeats: 0
-  finished: 0
-  secPerBeat: 0.34285715
-  fadeOffsetInBeats: 5
-  beatsBetweenExtend: 8
-  fadeEnd: -0.014708144
-  dsptimesong: 0
-  firstBeatOffset: 0.926
-  beatsInAdvance: 5
-  pathBeatsInAdvance: 10
-  bpm: 175
-  length: 0
-  paused: 0
-  lengthInBeats: 0
-  notes:
+  SongPosition: 0
+  SongPosInBeats: 0
+  SongFinished: 0
+  BeatLength: 0.34285715
+  FadeOffsetInBeats: 5
+  BeatsBetweenExtend: 8
+  FadeEnd: -0.014708144
+  TimeSinceSongStart: 0
+  FirstBeatOffset: 0.926
+  BeatsInAdvance: 5
+  PathBeatsInAdvance: 10
+  BPM: 175
+  SongLength: 0
+  Paused: 0
+  LengthInBeats: 0
+  NoteVectors:
   - {x: 5, y: 0}
   - {x: 10, y: 1}
   - {x: 12, y: 2}
@@ -2500,7 +2499,7 @@ MonoBehaviour:
   - {x: 250, y: 3}
   - {x: 260, y: 2}
   - {x: 265, y: 0}
-  notes2:
+  NoteVectors2:
   - {x: 13, y: 1}
   - {x: 15, y: 1}
   - {x: 30, y: 10}
@@ -2510,11 +2509,11 @@ MonoBehaviour:
   - {x: 50, y: 3}
   - {x: 55, y: 4}
   - {x: 60, y: 5}
-  nextIndex: 1
-  nextIndex2: 0
+  NextNoteIndex: 1
+  NextNoteIndex2: 0
   FirstLineNextButton: {fileID: 0}
   SecondLineNextButton: {fileID: 0}
-  cameraKeyframes:
+  CameraKeyframes:
   - {x: 0, y: 0}
   - {x: 256, y: 1}
 --- !u!1 &2110409343

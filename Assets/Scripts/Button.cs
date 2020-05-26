@@ -39,7 +39,6 @@ public class Button : MonoBehaviour
     // ButtonClass reference, shouldn't be used, but just in case
     public ButtonClass btn;
 
-    public Button pair = null;
     // Reference to the rank text prefab
     public GameObject rankPrefab;
 
@@ -74,7 +73,7 @@ public class Button : MonoBehaviour
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(rate.Value);
         Destroy(this.gameObject);
-        gameHandler.hits[(int)rate]++;
+        gameHandler.NoteHitCounter[(int)rate]++;
     }
 
     /// <summary>
@@ -85,7 +84,7 @@ public class Button : MonoBehaviour
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(GameHandler.Rank.Missed);
         Destroy(this.gameObject);
-        gameHandler.hits[4]++;
+        gameHandler.NoteHitCounter[4]++;
     }
 
     /// <summary>
@@ -102,7 +101,7 @@ public class Button : MonoBehaviour
         gameHandler = objects[0];
         MusicHandler[] objects2 = FindObjectsOfType<MusicHandler>();
         musicHandler = objects2[0];
-        Sprite[] types = objects[0].types;
+        Sprite[] types = objects[0].NoteTypes;
         renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = types[typein];
         type = typein;
@@ -110,7 +109,7 @@ public class Button : MonoBehaviour
         track = trackin;
         // For future me, this range is the "Hold" sprites in the GameHandler's type array.
         sus = IsSustain(type);
-        btn = new ButtonClass(this.gameObject, gameHandler.inputs[type], gameHandler.inputsAlt[type], buttonClass);
+        btn = new ButtonClass(this.gameObject, gameHandler.NoteInputs[type], gameHandler.NoteInputsAlt[type], buttonClass);
     }
 
     /// <summary>
@@ -149,7 +148,7 @@ public class Button : MonoBehaviour
     {
 
         // If the button reaches the "fadeEnd" part of the path, kill it with a missed ranking
-        if ((beat / musicHandler.lengthInBeats) <= musicHandler.fadeEnd)
+        if ((beat / musicHandler.LengthInBeats) <= musicHandler.FadeEnd)
         {
             Missed();
         }

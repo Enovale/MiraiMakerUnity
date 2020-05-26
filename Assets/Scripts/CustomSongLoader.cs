@@ -50,24 +50,24 @@ public class CustomSongLoader : MonoBehaviour
         string json = reader.ReadToEnd();
         reader.Close();
         LevelClass level = JsonUtility.FromJson<LevelClass>(json);
-        musicHandler.bpm = level.bpm;
-        musicHandler.levelName = level.levelName;
-        musicHandler.notes = level.notes;
-        musicHandler.notes2 = level.notes2;
-        musicHandler.cameraKeyframes = level.cameraKeyframes;
-        musicHandler.fadeOffsetInBeats = level.fadeOffsetInBeats;
-        musicHandler.firstBeatOffset = level.firstBeatOffset;
-        musicHandler.beatsBetweenExtend = level.beatsBetweenExtend;
-        musicHandler.beatsInAdvance = level.beatsInAdvance;
-        musicHandler.pathBeatsInAdvance = level.pathBeatsInAdvance;
-        musicHandler.gamePath.GetComponent<MotionPath>().controlPoints = level.path;
-        musicHandler.cameraMP.controlPoints = level.camPath;
-        musicHandler.songPath = level.songPath;
+        musicHandler.BPM = level.bpm;
+        musicHandler.LevelName = level.levelName;
+        musicHandler.NoteVectors = level.notes;
+        musicHandler.NoteVectors2 = level.notes2;
+        musicHandler.CameraKeyframes = level.cameraKeyframes;
+        musicHandler.FadeOffsetInBeats = level.fadeOffsetInBeats;
+        musicHandler.FirstBeatOffset = level.firstBeatOffset;
+        musicHandler.BeatsBetweenExtend = level.beatsBetweenExtend;
+        musicHandler.BeatsInAdvance = level.beatsInAdvance;
+        musicHandler.PathBeatsInAdvance = level.pathBeatsInAdvance;
+        musicHandler.GamePath.GetComponent<MotionPath>().controlPoints = level.path;
+        musicHandler.CameraMP.controlPoints = level.camPath;
+        musicHandler.SongPath = level.songPath;
         string url = Path.GetDirectoryName(Application.dataPath) + "/";
         string movieURL = url;
         url += level.songPath;
         movieURL = level.moviePath;
-        musicHandler.moviePath = movieURL;
+        musicHandler.MoviePath = movieURL;
         StartCoroutine(LoadAudio(url, Path.GetFileNameWithoutExtension(level.songPath)));
     }
 
@@ -122,7 +122,7 @@ public class CustomSongLoader : MonoBehaviour
                         break;
                 }
                 ac.name = name;
-                musicHandler.song = ac;
+                musicHandler.SongClip = ac;
                 musicHandler.BeginGame();
             }
         }
@@ -139,20 +139,20 @@ public class CustomSongLoader : MonoBehaviour
     string LevelToJson()
     {
         LevelClass level = new LevelClass();
-        level.levelName = musicHandler.levelName;
-        level.bpm = musicHandler.bpm;
-        level.notes = musicHandler.notes;
-        level.notes2 = musicHandler.notes2;
-        level.cameraKeyframes = musicHandler.cameraKeyframes;
-        level.firstBeatOffset = musicHandler.firstBeatOffset;
-        level.fadeOffsetInBeats = musicHandler.fadeOffsetInBeats;
-        level.beatsInAdvance = musicHandler.beatsInAdvance;
-        level.pathBeatsInAdvance = musicHandler.pathBeatsInAdvance;
-        level.beatsBetweenExtend = musicHandler.beatsBetweenExtend;
-        level.songPath = musicHandler.songPath;
-        level.moviePath = musicHandler.moviePath;
-        level.path = musicHandler.gamePath.GetComponent<MotionPath>().controlPoints;
-        level.camPath = musicHandler.cameraMP.controlPoints;
+        level.levelName = musicHandler.LevelName;
+        level.bpm = musicHandler.BPM;
+        level.notes = musicHandler.NoteVectors;
+        level.notes2 = musicHandler.NoteVectors2;
+        level.cameraKeyframes = musicHandler.CameraKeyframes;
+        level.firstBeatOffset = musicHandler.FirstBeatOffset;
+        level.fadeOffsetInBeats = musicHandler.FadeOffsetInBeats;
+        level.beatsInAdvance = musicHandler.BeatsInAdvance;
+        level.pathBeatsInAdvance = musicHandler.PathBeatsInAdvance;
+        level.beatsBetweenExtend = musicHandler.BeatsBetweenExtend;
+        level.songPath = musicHandler.SongPath;
+        level.moviePath = musicHandler.MoviePath;
+        level.path = musicHandler.GamePath.GetComponent<MotionPath>().controlPoints;
+        level.camPath = musicHandler.CameraMP.controlPoints;
         string json = JsonUtility.ToJson(level, true);
         return json;
     }

@@ -46,8 +46,8 @@ public class InputHandler : MonoBehaviour
             List<ButtonClass> trackOneNotes = musicHandler.GetButtonsInTimingWindow(true);
             List<ButtonClass> trackTwoNotes = musicHandler.GetButtonsInTimingWindow(false);
 
-            var pos = musicHandler.songPosInBeats;
-            var bpm = musicHandler.bpm;
+            var pos = musicHandler.SongPosInBeats;
+            var bpm = musicHandler.BPM;
             if (trackOneNotes.Any() && trackTwoNotes.Any())
             {
                 ButtonClass btn1 = trackOneNotes.First();
@@ -131,7 +131,7 @@ public class InputHandler : MonoBehaviour
     /// </summary>
     private void HandlePressNote(Button btn)
     {
-        btn.Hit(musicHandler.songPosInBeats, musicHandler.bpm);
+        btn.Hit(musicHandler.SongPosInBeats, musicHandler.BPM);
     }
 
     /// <summary>
