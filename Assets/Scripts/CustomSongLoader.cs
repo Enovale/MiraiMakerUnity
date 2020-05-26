@@ -17,11 +17,13 @@ public class LevelClass
     public int pathBeatsInAdvance;
     public float fadeOffsetInBeats;
     public float beatsBetweenExtend;
+#pragma warning disable CA2235 // Mark all non-serializable fields
     public Vector2[] notes;
     public Vector2[] notes2;
     public Vector2[] cameraKeyframes;
     public Vector3[] path;
     public Vector3[] camPath;
+#pragma warning restore CA2235 // Mark all non-serializable fields
 
     public static LevelClass CreateFromJSON(string jsonString)
     {
@@ -94,7 +96,8 @@ public class CustomSongLoader : MonoBehaviour
         }
         using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(furl, type))
         {
-            yield return www.Send();
+            yield return www.SendWebRequest();
+            //yield return www.Send();
 
             if (www.isNetworkError)
             {

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
+using System.Linq;
 using UnityEngine.UI;
 using UnityEngine.Video;
 
@@ -21,17 +22,14 @@ public class MusicHandler : MonoBehaviour
     public SpawnButtons buttonSpawner;
     public GameObject cursor;
     public new GameObject camera;
-    private FollowMotionPath cursorMP;
     public Animator cursorAN;
     public MotionPath cameraMP;
     public GameObject gamePath;
-    private MotionPath gamePathMP;
     public GameObject sliderObj;
 
     public bool cursorFlip = false;
 
     public GameObject sparksPrefab;
-    private GameObject sparksObj;
 
     // The current position of the song (in seconds)
     public float songPosition;
@@ -44,7 +42,7 @@ public class MusicHandler : MonoBehaviour
     public float secPerBeat;
 
     public float fadeOffsetInBeats;
-    // How many beats it takes until the cursor stops extending (or starts)
+    // How many beats it takes until the cursor extends
     public float beatsBetweenExtend;
 
     [HideInInspector]
@@ -64,10 +62,15 @@ public class MusicHandler : MonoBehaviour
     public Vector2[] notes;
     // Two note tracks needed for multi-line segments
     public Vector2[] notes2;
-    // The index of the next note to be spawned
     [HideInInspector]
+    /// <summary>
+    /// The index of the next note to be spawned on track 1.
+    /// </summary>
     public int nextIndex = 0;
     [HideInInspector]
+    /// <summary>
+    /// The index of the next note to be spawned on track 2.
+    /// </summary>
     public int nextIndex2 = 0;
 
     /// <summary>
@@ -79,10 +82,14 @@ public class MusicHandler : MonoBehaviour
     /// </summary>
     public Button SecondLineNextButton = null;
 
-    private bool cursorExtended = false;
-
     // Camera animation
     public Vector2[] cameraKeyframes;
+
+    private FollowMotionPath cursorMP;
+    private MotionPath gamePathMP;
+    private GameObject sparksObj;
+    private bool cursorExtended = false;
+
     private GameHandler gameHandler;
     #endregion
 
@@ -118,10 +125,16 @@ public class MusicHandler : MonoBehaviour
     /// <summary>
     /// Causes the cursor animator to extend for hitting second line notes (purely visual)
     /// </summary>
-    public void ExtendCursor()
+    public void ExtendCursor(bool? state = null)
     {
-        cursorExtended = !cursorExtended;
-        cursorAN.SetTrigger("Extend");
+        if (state == null)
+            state = !cursorExtended;
+        cursorExtended = state.Value;
+        if (cursorAN.GetBool("Extended") != state)
+        {
+            cursorAN.SetBool("Extended", state.Value);
+            cursorAN.SetTrigger("Extend");
+        }
     }
 
     public void MoveSlider()
@@ -129,12 +142,47 @@ public class MusicHandler : MonoBehaviour
         source.time = length * sliderObj.GetComponent<Slider>().value;
     }
 
+    public List<ButtonClass> GetSpawnedButtons(bool firstTrack)
+    {
+        if (gameHandler == null) return new List<ButtonClass>();
+        if (firstTrack)
+        {
+            return gameHandler.buttons.Where(btn => btn.btnClass != null).ToList();
+        }
+
+        return gameHandler.buttons2.Where(btn => btn.btnClass != null).ToList();
+    }
+
+    public List<ButtonClass> GetButtonsInTimingWindow(bool firstTrack)
+    {
+        if (gameHandler == null) return new List<ButtonClass>();
+        if (firstTrack)
+        {
+            return gameHandler.buttons.Where(btn => ButtonWithinTimingWindow(btn.btnClass)).ToList();
+        }
+
+        return gameHandler.buttons2.Where(btn => ButtonWithinTimingWindow(btn.btnClass)).ToList();
+    }
+
+    public bool ButtonWithinTimingWindow(Button btn)
+    {
+        if(btn != null)
+        {
+            if(Button.GetRank(songPosInBeats, bpm, btn.beat) != GameHandler.Rank.Missed)
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     /// <summary>
     /// Returns the closest note out of both lines, if they are both the same beat, returns null
     /// </summary>
     public Button GetClosestNote()
     {
-        if (FirstLineNextButton == null || SecondLineNextButton == null) return FirstLineNextButton ?? SecondLineNextButton;
+        if (FirstLineNextButton == null || SecondLineNextButton == null) 
+            return FirstLineNextButton != null ? FirstLineNextButton : SecondLineNextButton;
         if (FirstLineNextButton.beat > SecondLineNextButton.beat)
         {
             return SecondLineNextButton;
@@ -146,23 +194,6 @@ public class MusicHandler : MonoBehaviour
         else
         {
             return null;
-        }
-    }
-
-    /// <summary>
-    /// Are the closest notes on both lines the same beat?
-    /// </summary>
-    /// <returns></returns>
-    public bool ClosestNotesAreTheSame()
-    {
-        if (FirstLineNextButton == null || SecondLineNextButton == null) return false;
-        if (FirstLineNextButton.beat == SecondLineNextButton.beat)
-        {
-            return true;
-        }
-        else
-        {
-            return false;
         }
     }
 
@@ -217,13 +248,13 @@ public class MusicHandler : MonoBehaviour
         length = song.length - firstBeatOffset;
 
         // Get the time that the song starts
-        dsptimesong = (float)source.time;
+        dsptimesong = source.time;
 
         // Play the actual song
         source.clip = song;
         source.Play();
 
-        if (moviePath != "")
+        if (!string.IsNullOrEmpty(moviePath))
         {
             moviePath = "file:///" + Path.GetDirectoryName(Application.dataPath) + "/" + moviePath;
             movie.url = moviePath;
@@ -255,8 +286,8 @@ public class MusicHandler : MonoBehaviour
     private void UpdateLineVisuals()
     {
         Gradient gradient = new Gradient();
-        float gradient1 = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats) - (bpm / 60) * 0.01f);
-        fadeEnd = (((songPosInBeats - fadeOffsetInBeats) / lengthInBeats));
+        float gradient1 = ((songPosInBeats - fadeOffsetInBeats) / lengthInBeats) - bpm / 60 * 0.01f;
+        fadeEnd = (songPosInBeats - fadeOffsetInBeats) / lengthInBeats;
         float end1 = (songPosInBeats + pathBeatsInAdvance) / lengthInBeats;
         float end2 = end1;
         gradient.SetKeys(
@@ -289,24 +320,36 @@ public class MusicHandler : MonoBehaviour
         }
 
         // Calculate the position in seconds
-        songPosition = (float)(source.time - dsptimesong - firstBeatOffset);
+        songPosition = source.time - dsptimesong - firstBeatOffset;
 
         // Calculate the position in beats
         songPosInBeats = songPosition / secPerBeat;
 
         // Handle extending the button if a second track button is coming up
-        if (nextIndex2 < notes2.Length && songPosInBeats >= (notes2[nextIndex2].x - beatsBetweenExtend) && !cursorExtended)
+        // This can probably be further optimized
+        var trackTwoNotes = GetSpawnedButtons(false);
+        bool anyTrackTwoNotes = trackTwoNotes.Any();
+        float positionToExtend;
+        if(anyTrackTwoNotes)
         {
-            ExtendCursor();
+            positionToExtend = trackTwoNotes.First().btnClass.beat - beatsBetweenExtend;
+            if (songPosInBeats > positionToExtend && !cursorExtended)
+            {
+                ExtendCursor();
+            }
         }
-        else if (nextIndex2 < notes2.Length && songPosInBeats >= (notes2[nextIndex2].x + beatsBetweenExtend) && cursorExtended)
+        else if (!anyTrackTwoNotes)
         {
-            ExtendCursor();
-        }
+            if (nextIndex2 > 0)
+            {
+                // Gets the last note in the second track and adds the beatsBetweenExtend
+                positionToExtend = notes2[nextIndex2 - 1].x + beatsBetweenExtend;
 
-        if (nextIndex2 >= notes2.Length && songPosInBeats >= notes2[nextIndex2 - 1].x + beatsBetweenExtend && cursorExtended)
-        {
-            ExtendCursor();
+                if (songPosInBeats > positionToExtend && cursorExtended)
+                {
+                    ExtendCursor();
+                }
+            }
         }
 
         // If it's time to spawn the next note based on the beatsInAdvance, do so
@@ -356,12 +399,14 @@ public class MusicHandler : MonoBehaviour
         Vector3 cameraPos = cameraMP.PointOnNormalizedPath(final);
         camera.transform.position = cameraPos;
 
+        /* I'm Keeping this commented for now because even though I doubt i'll ever need this,
+         * I have this feeling that I shouldnt go around thanos snapping all my old code.
         // Determines whether or not the button is the next that should be being hit
         foreach (ButtonClass button in gameHandler.buttons)
         {
             if (button.btn == null) continue;
             Button btn = button.btnClass;
-            if (btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) == GameHandler.Rank.Missed && btn.beat < songPosInBeats)
+            if (Button.GetRank(songPosInBeats, bpm, button.btnClass.beat) == GameHandler.Rank.Missed && btn.beat < songPosInBeats)
             {
                 btn.upNext = false;
                 //return;
@@ -383,7 +428,7 @@ public class MusicHandler : MonoBehaviour
         {
             if (button.btn == null) continue;
             Button btn = button.btnClass;
-            if (btn.GetRank(songPosInBeats, bpm, button.btnClass.beat) == GameHandler.Rank.Missed && btn.beat < songPosInBeats)
+            if (Button.GetRank(songPosInBeats, bpm, button.btnClass.beat) == GameHandler.Rank.Missed && btn.beat < songPosInBeats)
             {
                 btn.upNext = false;
                 //return;
@@ -399,23 +444,6 @@ public class MusicHandler : MonoBehaviour
                 btn.upNext = false;
             }
         }
-
-        // TODO
-        // Get farther btn of the two, if they are the same type of button, turn off the button
-        /*if(FirstLineNextButton != null && SecondLineNextButton != null)
-        {
-            if(FirstLineNextButton.type == SecondLineNextButton.type)
-            {
-                if(FirstLineNextButton.beat >= SecondLineNextButton.beat) // Greater than or equal so you have to hit each twice
-                {
-                    FirstLineNextButton.upNext = false; // First line button is farther
-                } 
-                else if(SecondLineNextButton.beat > FirstLineNextButton.beat)
-                {
-                    SecondLineNextButton.upNext = false; // Second line button is farther
-                }
-            }
-        }*/
-
+        */
     }
 }

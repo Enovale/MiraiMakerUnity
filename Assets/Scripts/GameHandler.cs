@@ -25,11 +25,9 @@ public class GameHandler : MonoBehaviour
     /// Calling update each frame will massively slow down the game because the faster the rendering
     /// the more times update gets called, and Update is pretty hefty
     /// </summary>
-    public static float FrameTime { get {
-            return 1f / FrameRate;
-        }
-        private set { }
-    }
+    public static float FrameTime => 1f / FrameRate;
+
+    public int[] hits = new int[5];
 
     #region FPS
     // For fps calculation.
@@ -42,9 +40,8 @@ public class GameHandler : MonoBehaviour
     public double runningFrameRate { get; private set; }
     #endregion
 
-    public int[] hits = new int[5];
-
     private MusicHandler musicHandler;
+    private bool isMusicHandlerNotNull;
 
     public enum Rank
     {
@@ -83,8 +80,12 @@ public class GameHandler : MonoBehaviour
     {
         // Get reference to music handler
         if (FindObjectsOfType<MusicHandler>()[0] != null)
+        {
             musicHandler = FindObjectsOfType<MusicHandler>()[0];
-        // Make sure this object doesnt unload, for the results screen
+            isMusicHandlerNotNull = true;
+        }
+
+        // Make sure this object doesn't unload, for the results screen
         transform.SetParent(null);
         DontDestroyOnLoad(transform.gameObject);
     }
@@ -93,7 +94,7 @@ public class GameHandler : MonoBehaviour
     void Update()
     {
         // Only run this code in-game
-        if(musicHandler != null)
+        if(isMusicHandlerNotNull)
         {
             if(musicHandler.finished == true)
             {

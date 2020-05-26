@@ -1,26 +1,7 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
-// A class that holds information about a button concisely, for use in Ispector and the button array
-[System.Serializable]
-public class ButtonClass
-{
-    public GameObject btn;
-    public KeyCode key;
-    public KeyCode keyAlt;
-    public Button btnClass;
-
-    public ButtonClass(GameObject button, KeyCode code, KeyCode codeAlt, Button buttonClass)
-    {
-        // Button gameobject reference
-        this.btn = button;
-        // Keycode to hit button according to the input array
-        this.key = code;
-        this.keyAlt = codeAlt;
-        this.btnClass = buttonClass;
-    }
-}
 
 public class Button : MonoBehaviour
 {
@@ -61,6 +42,7 @@ public class Button : MonoBehaviour
     public Button pair = null;
     // Reference to the rank text prefab
     public GameObject rankPrefab;
+
     //Reference the game handlers
     private GameHandler gameHandler;
     private MusicHandler musicHandler;
@@ -74,9 +56,8 @@ public class Button : MonoBehaviour
     /// <param name="bottom">The first number in the range</param>
     /// <param name="top">The top number in the range</param>
     /// <returns></returns>
-    public static bool IsSustain(float numberToCheck)
+    public static bool IsSustain(int numberToCheck)
     {
-        numberToCheck = Mathf.RoundToInt(numberToCheck);
         return (numberToCheck >= susRange[0] && numberToCheck <= susRange[1]);
     }
 
@@ -86,10 +67,12 @@ public class Button : MonoBehaviour
     /// <param name="songPosInBeats">Position in the song in beats</param>
     /// <param name="bpm">Beats per Minute of the song</param>
     /// <param name="rate">Accuracy rating of the hit</param>
-    public void Hit(float songPosInBeats, float bpm, GameHandler.Rank rate)
+    public void Hit(float songPosInBeats, float bpm, GameHandler.Rank? rate = null)
     {
+        if (rate == null)
+            rate = GetRank(songPosInBeats, bpm, beat);
         GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
-        rankText.GetComponent<RankText>().Init(rate);
+        rankText.GetComponent<RankText>().Init(rate.Value);
         Destroy(this.gameObject);
         gameHandler.hits[(int)rate]++;
     }
@@ -137,7 +120,7 @@ public class Button : MonoBehaviour
     /// <param name="bpm">Song Beats per Minute</param>
     /// <param name="beat">Beat of the note in question</param>
     /// <returns>The rank index</returns>
-    public GameHandler.Rank GetRank(float pos, float bpm, float beat)
+    public static GameHandler.Rank GetRank(float pos, float bpm, float beat)
     {
         if ((pos <= beat && pos > beat - ((bpm / 60) / 5)) || (pos >= beat && pos < beat + ((bpm / 60) / 5)))
         {
@@ -169,32 +152,6 @@ public class Button : MonoBehaviour
         if ((beat / musicHandler.lengthInBeats) <= musicHandler.fadeEnd)
         {
             Missed();
-        }
-
-        // Prototype code; FUTURE ME, PLEASE OPTIMIZE
-        foreach (ButtonClass altBtn in gameHandler.buttons2)
-        {
-            if (altBtn.btnClass.upNext == true && GetRank(altBtn.btnClass.beat, musicHandler.bpm, beat) != GameHandler.Rank.Missed)
-            {
-                if (track == 0)
-                {
-                    pair = altBtn.btnClass;
-                }
-                break;
-            }
-        }
-;
-        // Prototype code; FUTURE ME, PLEASE OPTIMIZE
-        foreach (ButtonClass btn in gameHandler.buttons)
-        {
-            if (btn.btnClass.upNext == true && GetRank(btn.btnClass.beat, musicHandler.bpm, beat) != GameHandler.Rank.Missed)
-            {
-                if (track == 1)
-                {
-                    pair = btn.btnClass;
-                }
-                break;
-            }
         }
     }
 }

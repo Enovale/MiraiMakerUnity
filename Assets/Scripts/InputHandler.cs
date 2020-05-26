@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 public class InputHandler : MonoBehaviour
@@ -17,53 +18,120 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        foreach(KeyCode codeFirst in gameHandler.inputs)
-        {
-            int index = Array.IndexOf(gameHandler.inputs, codeFirst);
-            KeyCode codeSecond = gameHandler.inputs[index];
-            // Was the first button key pressed?
-            bool firstDown = Input.GetKeyDown(codeFirst);
-            // Was the second  button key pressed?
-            bool secondDown = Input.GetKeyDown(codeSecond);
+        if (musicHandler == null) return;
 
-            // The closest notes aren't on the same beat
-            if(!musicHandler.ClosestNotesAreTheSame())
+        HandleInput();
+    }
+
+    /// <summary>
+    /// Handle note registration.
+    /// 
+    /// Here's how it works:
+    /// "Next" refers to the earliest note in the timing window.
+    /// On key press:
+    /// - Is the next note a double note? (two notes on the same beat for each track)
+    ///   - No: Handle normally, end method
+    /// - Get the next note on track one
+    ///   - Is there one that matches the key we pressed?
+    ///     - Yes: Hit it
+    ///     - Hit both inputs at once: Hit the first, then go to No
+    ///     - No: Is there one on the second track?
+    ///       - No: Miss the next note on track 1, track 2 if there are none
+    ///       - Yes: Hit it
+    /// </summary>
+    private void HandleInput()
+    {
+        if (Input.anyKeyDown)
+        {
+            List<ButtonClass> trackOneNotes = musicHandler.GetButtonsInTimingWindow(true);
+            List<ButtonClass> trackTwoNotes = musicHandler.GetButtonsInTimingWindow(false);
+
+            var pos = musicHandler.songPosInBeats;
+            var bpm = musicHandler.bpm;
+            if (trackOneNotes.Any() && trackTwoNotes.Any())
             {
-                if(firstDown || secondDown)
+                ButtonClass btn1 = trackOneNotes.First();
+                ButtonClass btn2 = trackTwoNotes.First();
+                if (btn1.btnClass.beat < btn2.btnClass.beat)
                 {
-                    Button note = musicHandler.GetClosestNote();
-                    if (note == null) return;
-                    if (codeFirst == note.btn.key || codeSecond == note.btn.keyAlt)
+                    if (Input.GetKeyDown(btn1.key) || Input.GetKeyDown(btn1.keyAlt))
                     {
-                        HandlePressNote(note);
+                        HandlePressNote(btn1.btnClass);
+                        return;
                     }
                     else
                     {
-                        Button altNote = null;
-                        if (note.track == 0)
-                        {
-                            altNote = musicHandler.SecondLineNextButton;
-                        } else
-                        {
-                            altNote = musicHandler.FirstLineNextButton;
-                        }
-                        if (altNote == null) return;
-                        if (codeFirst == altNote.btn.key || codeSecond == altNote.btn.keyAlt)
-                        {
-                            HandlePressNote(altNote);
-                        }
+                        btn1.btnClass.Missed();
+                        return;
                     }
+                }
+                else if (btn1.btnClass.beat > btn2.btnClass.beat)
+                {
+                    if (Input.GetKeyDown(btn2.key) || Input.GetKeyDown(btn2.keyAlt))
+                    {
+                        HandlePressNote(btn2.btnClass);
+                        return;
+                    }
+                    else
+                    {
+                        btn2.btnClass.Missed();
+                        return;
+                    }
+                }
+            }
+
+            bool buttonHit = false;
+            foreach (ButtonClass button in trackOneNotes)
+            {
+                Button btnClass = button.btnClass;
+
+                // If you hit both on the same frame, pretend like you didnt hit the first one.
+                if (Input.GetKeyDown(button.key) && Input.GetKeyDown(button.keyAlt))
+                {
+                    btnClass.Hit(pos, bpm);
+                    break;
+                }
+                else if (Input.GetKeyDown(button.key) || Input.GetKeyDown(button.keyAlt))
+                {
+                    buttonHit = true;
+                    HandlePressNote(btnClass);
+                    break;
+                }
+            }
+
+            bool buttonHit2 = false;
+            foreach (ButtonClass button in trackTwoNotes)
+            {
+                Button btnClass = button.btnClass;
+
+                if (Input.GetKeyDown(button.key) || Input.GetKeyDown(button.keyAlt))
+                {
+                    buttonHit2 = true;
+                    HandlePressNote(btnClass);
+                    break;
+                }
+            }
+
+            if (!buttonHit2 && !buttonHit)
+            {
+                if (trackOneNotes.Count > 0)
+                {
+                    trackOneNotes.First().btnClass.Missed();
+                }
+                else if (trackTwoNotes.Count > 0)
+                {
+                    trackTwoNotes.First().btnClass.Missed();
                 }
             }
         }
     }
-    
+
     /// <summary>
     /// Logic for pressing a note (only runs when note is not a sustain note)
     /// </summary>
     private void HandlePressNote(Button btn)
     {
-        btn.Hit(musicHandler.songPosInBeats, musicHandler.bpm, btn.GetRank(musicHandler.songPosInBeats, musicHandler.bpm, btn.beat));
+        btn.Hit(musicHandler.songPosInBeats, musicHandler.bpm);
     }
 
     /// <summary>

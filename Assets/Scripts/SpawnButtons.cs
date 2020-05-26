@@ -10,23 +10,17 @@ public class SpawnButtons : MonoBehaviour
     // Needs a reference to some game state vars
     public MotionPath path;
     public GameObject buttonPrefab;
-    [SerializeField]
-    private MusicHandler musicHandler;
     public float trackOffset = 2f;
+
+    private MusicHandler musicHandler;
     private GameHandler gameHandler;
 
     // Start is called before the first frame update
     void Start()
     {
-        // Get reference to the Game Handler
-        GameHandler[] objects = FindObjectsOfType<GameHandler>();
-        gameHandler = objects[0];
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        // Get reference to the Game Handler and Music Handler
+        musicHandler = FindObjectOfType<MusicHandler>();
+        gameHandler = FindObjectOfType<GameHandler>();
     }
 
     /// <summary>

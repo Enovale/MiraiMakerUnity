@@ -96,6 +96,7 @@ LightmapSettings:
     m_PVRFilteringAtrousPositionSigmaAO: 1
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
+    m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
   m_UseShadowmask: 1
 --- !u!196 &4
@@ -550,8 +551,9 @@ Light:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 198991912}
   m_Enabled: 1
-  serializedVersion: 9
+  serializedVersion: 10
   m_Type: 1
+  m_Shape: 0
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_Intensity: 1
   m_Range: 10
@@ -653,6 +655,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -872,6 +875,7 @@ SpriteRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1614,7 +1618,7 @@ MonoBehaviour:
   buttons: []
   buttons2: []
   inputs: 200000006100000073000000640000006600000067000000680000006200000061000000730000006400000066000000
-  inputsAlt: 200000001301000012010000110100001401000061000000730000006400000066000000000000000000000000000000
+  inputsAlt: 000000001301000012010000110100001401000061000000730000006400000066000000000000000000000000000000
   hits: 0000000000000000000000000000000000000000
 --- !u!1 &1326033567
 GameObject:
@@ -1777,7 +1781,6 @@ MonoBehaviour:
   path: {fileID: 2124337972}
   buttonPrefab: {fileID: 3166015888994354214, guid: 670246f37285d034aa3bcafeac2e8103,
     type: 3}
-  musicHandler: {fileID: 2064718266}
   trackOffset: 2
 --- !u!4 &1370737674
 Transform:
@@ -2739,6 +2742,7 @@ MeshRenderer:
   m_MotionVectors: 1
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
+  m_RayTracingMode: 2
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
