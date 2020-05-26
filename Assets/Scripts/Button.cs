@@ -26,12 +26,13 @@ public class Button : MonoBehaviour
     public int index;
 
     // Range which are sustain notes
-    public static int[] susRange = { 8, 12 };
+    public static int[] susRange = {8, 12};
 
     /// <summary>
     /// Is this note the next note to play?
     /// </summary>
     public bool upNext = false;
+
     // Sustain note
     public bool sus = false;
     public bool holdingSus = false;
@@ -44,7 +45,9 @@ public class Button : MonoBehaviour
 
     //Reference the game handlers
     private GameHandler gameHandler;
+
     private MusicHandler musicHandler;
+
     // Need reference to sprite renderer to change the type
     private new SpriteRenderer renderer;
 
@@ -57,7 +60,7 @@ public class Button : MonoBehaviour
     /// <returns></returns>
     public static bool IsSustain(int numberToCheck)
     {
-        return (numberToCheck >= susRange[0] && numberToCheck <= susRange[1]);
+        return numberToCheck >= susRange[0] && numberToCheck <= susRange[1];
     }
 
     /// <summary>
@@ -70,10 +73,10 @@ public class Button : MonoBehaviour
     {
         if (rate == null)
             rate = GetRank(songPosInBeats, bpm, beat);
-        GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
+        var rankText = Instantiate(rankPrefab, gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(rate.Value);
-        Destroy(this.gameObject);
-        gameHandler.NoteHitCounter[(int)rate]++;
+        Destroy(gameObject);
+        gameHandler.NoteHitCounter[(int) rate]++;
     }
 
     /// <summary>
@@ -81,9 +84,9 @@ public class Button : MonoBehaviour
     /// </summary>
     public void Missed()
     {
-        GameObject rankText = Instantiate(rankPrefab, this.gameObject.transform.position, new Quaternion(0, 0, 0, 0));
+        var rankText = Instantiate(rankPrefab, gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(GameHandler.Rank.Missed);
-        Destroy(this.gameObject);
+        Destroy(gameObject);
         gameHandler.NoteHitCounter[4]++;
     }
 
@@ -97,11 +100,9 @@ public class Button : MonoBehaviour
     {
         // Create button
         beat = curbeat;
-        GameHandler[] objects = FindObjectsOfType<GameHandler>();
-        gameHandler = objects[0];
-        MusicHandler[] objects2 = FindObjectsOfType<MusicHandler>();
-        musicHandler = objects2[0];
-        Sprite[] types = objects[0].NoteTypes;
+        gameHandler = FindObjectOfType<GameHandler>();
+        musicHandler = FindObjectOfType<MusicHandler>();
+        var types = gameHandler.NoteTypes;
         renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = types[typein];
         type = typein;
@@ -109,7 +110,7 @@ public class Button : MonoBehaviour
         track = trackin;
         // For future me, this range is the "Hold" sprites in the GameHandler's type array.
         sus = IsSustain(type);
-        btn = new ButtonClass(this.gameObject, gameHandler.NoteInputs[type], gameHandler.NoteInputsAlt[type], buttonClass);
+        btn = new ButtonClass(gameObject, gameHandler.NoteInputs[type], gameHandler.NoteInputsAlt[type], buttonClass);
     }
 
     /// <summary>
@@ -121,36 +122,21 @@ public class Button : MonoBehaviour
     /// <returns>The rank index</returns>
     public static GameHandler.Rank GetRank(float pos, float bpm, float beat)
     {
-        if ((pos <= beat && pos > beat - ((bpm / 60) / 5)) || (pos >= beat && pos < beat + ((bpm / 60) / 5)))
-        {
+        if (pos <= beat && pos > beat - bpm / 60 / 5 || pos >= beat && pos < beat + bpm / 60 / 5)
             return GameHandler.Rank.Cool;
-        }
-        else if ((pos <= beat && pos > beat - ((bpm / 60) / 4)) || (pos >= beat && pos < beat + ((bpm / 60) / 4)))
-        {
+        if (pos <= beat && pos > beat - bpm / 60 / 4 || pos >= beat && pos < beat + bpm / 60 / 4)
             return GameHandler.Rank.Fine;
-        }
-        else if ((pos <= beat && pos > beat - ((bpm / 60) / 3)) || (pos >= beat && pos < beat + ((bpm / 60) / 3)))
-        {
+        if (pos <= beat && pos > beat - bpm / 60 / 3 || pos >= beat && pos < beat + bpm / 60 / 3)
             return GameHandler.Rank.Safe;
-        }
-        else if ((pos <= beat && pos > beat - ((bpm / 60) / 2)) || (pos >= beat && pos < beat + ((bpm / 60) / 2)))
-        {
+        if (pos <= beat && pos > beat - bpm / 60 / 2 || pos >= beat && pos < beat + bpm / 60 / 2)
             return GameHandler.Rank.Sad;
-        }
-        else
-        {
-            return GameHandler.Rank.Missed;
-        }
+        return GameHandler.Rank.Missed;
     }
 
-    // Update is called once per frame
-    void Update()
+    private void Update()
     {
-
         // If the button reaches the "fadeEnd" part of the path, kill it with a missed ranking
-        if ((beat / musicHandler.LengthInBeats) <= musicHandler.FadeEnd)
-        {
+        if (beat / musicHandler.LengthInBeats <= musicHandler.FadeEnd) 
             Missed();
-        }
     }
 }

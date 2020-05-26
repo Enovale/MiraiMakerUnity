@@ -16,7 +16,7 @@ public class SpawnButtons : MonoBehaviour
     private GameHandler gameHandler;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         // Get reference to the Game Handler and Music Handler
         musicHandler = FindObjectOfType<MusicHandler>();
@@ -34,25 +34,23 @@ public class SpawnButtons : MonoBehaviour
     /// <returns></returns>
     public GameObject spawn(float uv, float type, float beat, int indexin, int track)
     {
-        Vector3 buttonPos = new Vector3(path.PointOnNormalizedPath(uv).x, path.PointOnNormalizedPath(uv).y, buttonPrefab.transform.position.z);
-        GameObject button = Instantiate(buttonPrefab, buttonPos, new Quaternion(0, 0, 0, 0));
+        var buttonPos = new Vector3(path.PointOnNormalizedPath(uv).x, path.PointOnNormalizedPath(uv).y,
+            buttonPrefab.transform.position.z);
+        var button = Instantiate(buttonPrefab, buttonPos, new Quaternion(0, 0, 0, 0));
         if (track != 0)
         {
             button.transform.up = path.NormalOnNormalizedPath(uv);
-            Vector3 offset = transform.right * (trackOffset * -1);
-            if(gameHandler.cursorFlipped)
-            {
+            var offset = transform.right * (trackOffset * -1);
+            if (gameHandler.cursorFlipped)             
                 offset = transform.right * (trackOffset * 1);
-            }
             button.transform.Translate(offset, Space.Self);
             button.transform.eulerAngles = new Vector3(0, 0, 0);
         }
+
         // If type given does not exist, switch to Star(0)
-        if (Mathf.RoundToInt(type) >= gameHandler.NoteTypes.Length)
-        {
+        if (Mathf.RoundToInt(type) >= gameHandler.NoteTypes.Length)         
             type = 0;
-        }
-        Button btnClass = button.GetComponent<Button>();
+        var btnClass = button.GetComponent<Button>();
         btnClass.Init(Mathf.RoundToInt(type), beat, indexin, track, btnClass);
         return button;
     }

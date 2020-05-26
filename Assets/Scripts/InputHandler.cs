@@ -6,7 +6,6 @@ using UnityEngine;
 
 public class InputHandler : MonoBehaviour
 {
-
     private GameHandler gameHandler;
     private MusicHandler musicHandler;
 
@@ -18,7 +17,8 @@ public class InputHandler : MonoBehaviour
 
     private void Update()
     {
-        if (musicHandler == null) return;
+        if (musicHandler == null)
+            return;
 
         HandleInput();
     }
@@ -28,11 +28,11 @@ public class InputHandler : MonoBehaviour
     /// 
     /// Here's how it works:
     /// "Next" refers to the earliest note in the timing window.
-    /// On key press:
+    /// On Key press:
     /// - Is the next note a double note? (two notes on the same beat for each track)
     ///   - No: Handle normally, end method
     /// - Get the next note on track one
-    ///   - Is there one that matches the key we pressed?
+    ///   - Is there one that matches the Key we pressed?
     ///     - Yes: Hit it
     ///     - Hit both inputs at once: Hit the first, then go to No
     ///     - No: Is there one on the second track?
@@ -43,55 +43,55 @@ public class InputHandler : MonoBehaviour
     {
         if (Input.anyKeyDown)
         {
-            List<ButtonClass> trackOneNotes = musicHandler.GetButtonsInTimingWindow(true);
-            List<ButtonClass> trackTwoNotes = musicHandler.GetButtonsInTimingWindow(false);
+            var trackOneNotes = musicHandler.GetButtonsInTimingWindow(true);
+            var trackTwoNotes = musicHandler.GetButtonsInTimingWindow(false);
 
             var pos = musicHandler.SongPosInBeats;
             var bpm = musicHandler.BPM;
             if (trackOneNotes.Any() && trackTwoNotes.Any())
             {
-                ButtonClass btn1 = trackOneNotes.First();
-                ButtonClass btn2 = trackTwoNotes.First();
-                if (btn1.btnClass.beat < btn2.btnClass.beat)
+                var btn1 = trackOneNotes.First();
+                var btn2 = trackTwoNotes.First();
+                if (btn1.Button.beat < btn2.Button.beat)
                 {
-                    if (Input.GetKeyDown(btn1.key) || Input.GetKeyDown(btn1.keyAlt))
+                    if (Input.GetKeyDown(btn1.Key) || Input.GetKeyDown(btn1.KeyAlt))
                     {
-                        HandlePressNote(btn1.btnClass);
+                        HandlePressNote(btn1.Button);
                         return;
                     }
                     else
                     {
-                        btn1.btnClass.Missed();
+                        btn1.Button.Missed();
                         return;
                     }
                 }
-                else if (btn1.btnClass.beat > btn2.btnClass.beat)
+                else if (btn1.Button.beat > btn2.Button.beat)
                 {
-                    if (Input.GetKeyDown(btn2.key) || Input.GetKeyDown(btn2.keyAlt))
+                    if (Input.GetKeyDown(btn2.Key) || Input.GetKeyDown(btn2.KeyAlt))
                     {
-                        HandlePressNote(btn2.btnClass);
+                        HandlePressNote(btn2.Button);
                         return;
                     }
                     else
                     {
-                        btn2.btnClass.Missed();
+                        btn2.Button.Missed();
                         return;
                     }
                 }
             }
 
-            bool buttonHit = false;
-            foreach (ButtonClass button in trackOneNotes)
+            var buttonHit = false;
+            foreach (var button in trackOneNotes)
             {
-                Button btnClass = button.btnClass;
+                var btnClass = button.Button;
 
                 // If you hit both on the same frame, pretend like you didnt hit the first one.
-                if (Input.GetKeyDown(button.key) && Input.GetKeyDown(button.keyAlt))
+                if (Input.GetKeyDown(button.Key) && Input.GetKeyDown(button.KeyAlt))
                 {
                     btnClass.Hit(pos, bpm);
                     break;
                 }
-                else if (Input.GetKeyDown(button.key) || Input.GetKeyDown(button.keyAlt))
+                else if (Input.GetKeyDown(button.Key) || Input.GetKeyDown(button.KeyAlt))
                 {
                     buttonHit = true;
                     HandlePressNote(btnClass);
@@ -99,12 +99,12 @@ public class InputHandler : MonoBehaviour
                 }
             }
 
-            bool buttonHit2 = false;
-            foreach (ButtonClass button in trackTwoNotes)
+            var buttonHit2 = false;
+            foreach (var button in trackTwoNotes)
             {
-                Button btnClass = button.btnClass;
+                var btnClass = button.Button;
 
-                if (Input.GetKeyDown(button.key) || Input.GetKeyDown(button.keyAlt))
+                if (Input.GetKeyDown(button.Key) || Input.GetKeyDown(button.KeyAlt))
                 {
                     buttonHit2 = true;
                     HandlePressNote(btnClass);
@@ -115,13 +115,8 @@ public class InputHandler : MonoBehaviour
             if (!buttonHit2 && !buttonHit)
             {
                 if (trackOneNotes.Count > 0)
-                {
-                    trackOneNotes.First().btnClass.Missed();
-                }
-                else if (trackTwoNotes.Count > 0)
-                {
-                    trackTwoNotes.First().btnClass.Missed();
-                }
+                    trackOneNotes.First().Button.Missed();
+                else if (trackTwoNotes.Count > 0) trackTwoNotes.First().Button.Missed();
             }
         }
     }
@@ -139,6 +134,5 @@ public class InputHandler : MonoBehaviour
     /// </summary>
     private void HandleHoldNote(Button btn, KeyCode keyPressed)
     {
-
     }
 }

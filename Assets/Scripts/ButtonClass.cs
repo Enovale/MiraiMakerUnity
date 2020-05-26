@@ -6,18 +6,18 @@
 [System.Serializable]
 public class ButtonClass
 {
-    public GameObject btn;
-    public KeyCode key;
-    public KeyCode keyAlt;
-    public Button btnClass;
+    public GameObject ButtonObj;
+    public KeyCode Key;
+    public KeyCode KeyAlt;
+    public Button Button;
 
     public ButtonClass(GameObject button, KeyCode code, KeyCode codeAlt, Button buttonClass)
     {
         // Button gameobject reference
-        this.btn = button;
+        ButtonObj = button;
         // Keycode to hit button according to the input array
-        this.key = code;
-        this.keyAlt = codeAlt;
-        this.btnClass = buttonClass;
+        Key = code;
+        KeyAlt = codeAlt;
+        Button = buttonClass;
     }
 }

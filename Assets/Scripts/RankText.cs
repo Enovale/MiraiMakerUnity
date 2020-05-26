@@ -14,9 +14,8 @@ public class RankText : MonoBehaviour
     public Animator spriteAnim;
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
-        
     }
 
     /// <summary>
@@ -25,16 +24,14 @@ public class RankText : MonoBehaviour
     /// <param name="rank">Accuracy of the hit</param>
     public void Init(GameHandler.Rank rank)
     {
-        spriteRend.sprite = rankSprites[(int)rank];
+        spriteRend.sprite = rankSprites[(int) rank];
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // If the animation finishes, kill the object to save memory
-        if (!spriteAnim.GetCurrentAnimatorStateInfo(0).IsName("RankFloat"))
-        {
-            Destroy(this.gameObject);
-        }
+        if (!spriteAnim.GetCurrentAnimatorStateInfo(0).IsName("RankFloat")) 
+            Destroy(gameObject);
     }
 }

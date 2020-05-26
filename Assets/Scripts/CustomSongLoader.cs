@@ -33,11 +33,10 @@ public class LevelClass
 
 public class CustomSongLoader : MonoBehaviour
 {
-
     public MusicHandler musicHandler;
     public string filePath;
 
-    void Awake()
+    private void Awake()
     {
         //WriteLevelToJSON();
         //LoadLevelFromJSON();
@@ -46,10 +45,10 @@ public class CustomSongLoader : MonoBehaviour
 
     public void LoadLevelFromJSON()
     {
-        StreamReader reader = new StreamReader(Path.GetDirectoryName(Application.dataPath) + "/" + filePath);
-        string json = reader.ReadToEnd();
+        var reader = new StreamReader(Path.GetDirectoryName(Application.dataPath) + "/" + filePath);
+        var json = reader.ReadToEnd();
         reader.Close();
-        LevelClass level = JsonUtility.FromJson<LevelClass>(json);
+        var level = JsonUtility.FromJson<LevelClass>(json);
         musicHandler.BPM = level.bpm;
         musicHandler.LevelName = level.levelName;
         musicHandler.NoteVectors = level.notes;
@@ -63,17 +62,17 @@ public class CustomSongLoader : MonoBehaviour
         musicHandler.GamePath.GetComponent<MotionPath>().controlPoints = level.path;
         musicHandler.CameraMP.controlPoints = level.camPath;
         musicHandler.SongPath = level.songPath;
-        string url = Path.GetDirectoryName(Application.dataPath) + "/";
-        string movieURL = url;
+        var url = Path.GetDirectoryName(Application.dataPath) + "/";
+        var movieURL = url;
         url += level.songPath;
         movieURL = level.moviePath;
         musicHandler.MoviePath = movieURL;
         StartCoroutine(LoadAudio(url, Path.GetFileNameWithoutExtension(level.songPath)));
     }
 
-    IEnumerator LoadAudio(string url, string name)
+    private IEnumerator LoadAudio(string url, string name)
     {
-        string furl = "file:///" + url;
+        var furl = "file:///" + url;
         AudioType type;
         print(Path.GetExtension(url).ToLower());
         switch (Path.GetExtension(url).ToLower())
@@ -94,7 +93,8 @@ public class CustomSongLoader : MonoBehaviour
                 type = AudioType.UNKNOWN;
                 break;
         }
-        using (UnityWebRequest www = UnityWebRequestMultimedia.GetAudioClip(furl, type))
+
+        using (var www = UnityWebRequestMultimedia.GetAudioClip(furl, type))
         {
             yield return www.SendWebRequest();
             //yield return www.Send();
@@ -108,7 +108,7 @@ public class CustomSongLoader : MonoBehaviour
                 AudioClip ac;
                 switch (type)
                 {
-                    case AudioType.MPEG:/*
+                    case AudioType.MPEG: /*
 #if UNITY_STANDALONE_WIN || UNITY_EDITOR_WIN
                         ac = NAudioPlayer.FromMp3Data(www.downloadHandler.data);
                         break;
@@ -121,6 +121,7 @@ public class CustomSongLoader : MonoBehaviour
                         ac = DownloadHandlerAudioClip.GetContent(www);
                         break;
                 }
+
                 ac.name = name;
                 musicHandler.SongClip = ac;
                 musicHandler.BeginGame();
@@ -131,14 +132,14 @@ public class CustomSongLoader : MonoBehaviour
 
     public void WriteLevelToJSON()
     {
-        StreamWriter writer = new StreamWriter(filePath);
+        var writer = new StreamWriter(filePath);
         writer.Write(LevelToJson());
         writer.Close();
     }
 
-    string LevelToJson()
+    private string LevelToJson()
     {
-        LevelClass level = new LevelClass();
+        var level = new LevelClass();
         level.levelName = musicHandler.LevelName;
         level.bpm = musicHandler.BPM;
         level.notes = musicHandler.NoteVectors;
@@ -153,7 +154,7 @@ public class CustomSongLoader : MonoBehaviour
         level.moviePath = musicHandler.MoviePath;
         level.path = musicHandler.GamePath.GetComponent<MotionPath>().controlPoints;
         level.camPath = musicHandler.CameraMP.controlPoints;
-        string json = JsonUtility.ToJson(level, true);
+        var json = JsonUtility.ToJson(level, true);
         return json;
     }
 }

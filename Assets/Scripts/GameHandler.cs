@@ -13,6 +13,7 @@ public class GameHandler : MonoBehaviour
     /// Enables a song position slider and seeing certain information in the console.
     /// </summary>
     public bool DebugMode = false;
+
     public Sprite[] NoteTypes;
     public List<ButtonClass> SongButtons;
     public List<ButtonClass> SongButtons2;
@@ -26,9 +27,10 @@ public class GameHandler : MonoBehaviour
     /// The framerate of the renderer (not related to the game logic framerate)
     /// </summary>
     [HideInInspector]
-    public double runningFrameRate { get; private set; }
+    public double RunningFrameRate { get; private set; }
 
     public static int FrameRate = 60;
+
     /// <summary>
     /// How long between each frame, because game logic doesn't need to be called every frame
     /// Calling update each frame will massively slow down the game because the faster the rendering
@@ -39,9 +41,11 @@ public class GameHandler : MonoBehaviour
     public int[] NoteHitCounter = new int[5];
 
     #region FPS
+
     // For fps calculation.
     private int frameCount;
     private float elapsedTime;
+
     #endregion
 
     private MusicHandler musicHandler;
@@ -53,7 +57,7 @@ public class GameHandler : MonoBehaviour
         Fine = 1,
         Safe = 2,
         Sad = 3,
-        Missed = 4,
+        Missed = 4
     }
 
     /// <summary>
@@ -67,20 +71,16 @@ public class GameHandler : MonoBehaviour
 
     public void ResetButtons()
     {
-        foreach (ButtonClass btn in SongButtons)
-        {
-            Destroy(btn.btn);
-        }
-        foreach (ButtonClass btn in SongButtons2)
-        {
-            Destroy(btn.btn);
-        }
+        foreach (var btn in SongButtons)         
+            Destroy(btn.ButtonObj);
+        foreach (var btn in SongButtons2)         
+            Destroy(btn.ButtonObj);
         SongButtons.Clear();
         SongButtons2.Clear();
     }
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         // Get reference to music handler
         if (FindObjectsOfType<MusicHandler>()[0] != null)
@@ -95,23 +95,19 @@ public class GameHandler : MonoBehaviour
     }
 
     // Update is called once per frame
-    void Update()
+    private void Update()
     {
         // Only run this code in-game
-        if(_isMusicHandlerNotNull)
-        {
-            if(musicHandler.SongFinished == true)
-            {
+        if (_isMusicHandlerNotNull)
+            if (musicHandler.SongFinished == true)
                 LoadScene(2);
-            }
-        }
 
         // FPS calculation
         frameCount++;
         elapsedTime += Time.unscaledDeltaTime;
         if (elapsedTime > 0.5f)
         {
-            runningFrameRate = System.Math.Round(frameCount / elapsedTime, 1, System.MidpointRounding.AwayFromZero);
+            RunningFrameRate = System.Math.Round(frameCount / elapsedTime, 1, System.MidpointRounding.AwayFromZero);
             frameCount = 0;
             elapsedTime = 0;
         }

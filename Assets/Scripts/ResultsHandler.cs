@@ -8,27 +8,25 @@ using UnityEngine.UI;
 /// </summary>
 public class ResultsHandler : MonoBehaviour
 {
-
     private GameHandler gameHandler;
     public Text[] amountList = new Text[5];
 
     // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         // Get reference to the Game Handler
-        GameHandler[] objects = FindObjectsOfType<GameHandler>();
-        gameHandler = objects[0];
+        gameHandler = FindObjectOfType<GameHandler>();
 
-        int i = 0;
+        var i = 0;
         // Fill in the rank amounts
-        foreach(Text text in amountList)
+        foreach (var text in amountList)
         {
             text.text = gameHandler.NoteHitCounter[i].ToString();
             i++;
         }
     }
 
-    public void EndGame()
+    public static void EndGame()
     {
         Application.Quit();
     }
