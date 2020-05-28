@@ -26,11 +26,11 @@ public class SpawnButtons : MonoBehaviour
     /// <summary>
     /// Spawns the button using a prefab and initiates it with the variables you give it. Also returns the button as a gameObject
     /// </summary>
-    /// <param name="uv">Percentage of the path</param>
+    /// <param name="uv">Percentage of the BeatPath</param>
     /// <param name="type">Type of button</param>
     /// <param name="beat">Beat of button</param>
     /// <param name="indexin">Index of the button</param>
-    /// <param name="track">The track to spawn on (0-1)</param>
+    /// <param name="track">The Track to spawn on (0-1)</param>
     /// <returns></returns>
     public GameObject spawn(float uv, float type, float beat, int indexin, int track)
     {
@@ -47,7 +47,7 @@ public class SpawnButtons : MonoBehaviour
             button.transform.eulerAngles = new Vector3(0, 0, 0);
         }
 
-        // If type given does not exist, switch to Star(0)
+        // If Type given does not exist, switch to Star(0)
         if (Mathf.RoundToInt(type) >= gameHandler.NoteTypes.Length)         
             type = 0;
         var btnClass = button.GetComponent<Button>();

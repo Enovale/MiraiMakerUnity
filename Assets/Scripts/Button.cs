@@ -8,47 +8,41 @@ public class Button : MonoBehaviour
     /// <summary>
     /// What kind of button is this?
     /// </summary>
-    public int type;
+    public int NoteType;
 
     /// <summary>
     /// Which of the two tracks this button is on; 0 = first, 1 = second
     /// </summary>
-    public int track = 0;
+    public int Track = 0;
 
     /// <summary>
-    /// Which beat this button plays on
+    /// Which Beat this button plays on
     /// </summary>
-    public float beat;
+    public float Beat;
 
     /// <summary>
     /// Where in the button list is this
     /// </summary>
-    public int index;
-
-    // Range which are sustain notes
-    public static int[] susRange = {8, 12};
-
-    /// <summary>
-    /// Is this note the next note to play?
-    /// </summary>
-    public bool upNext = false;
+    public int NoteIndex;
 
     // Sustain note
-    public bool sus = false;
-    public bool holdingSus = false;
+    public bool Sustain = false;
+    public bool HoldingNote = false;
 
     // ButtonClass reference, shouldn't be used, but just in case
-    public ButtonClass btn;
+    public ButtonClass BtnClass;
 
     // Reference to the rank text prefab
     public GameObject rankPrefab;
 
+    // Range which are sustain notes
+    private static readonly int[] susRange = {8, 12};
+
     //Reference the game handlers
     private GameHandler gameHandler;
-
     private MusicHandler musicHandler;
 
-    // Need reference to sprite renderer to change the type
+    // Need reference to sprite renderer to change the NoteType
     private new SpriteRenderer renderer;
 
     /// <summary>
@@ -72,7 +66,7 @@ public class Button : MonoBehaviour
     public void Hit(float songPosInBeats, float bpm, GameHandler.Rank? rate = null)
     {
         if (rate == null)
-            rate = GetRank(songPosInBeats, bpm, beat);
+            rate = GetRank(songPosInBeats, bpm, Beat);
         var rankText = Instantiate(rankPrefab, gameObject.transform.position, new Quaternion(0, 0, 0, 0));
         rankText.GetComponent<RankText>().Init(rate.Value);
         Destroy(gameObject);
@@ -94,23 +88,23 @@ public class Button : MonoBehaviour
     /// Initiates the buttons defaults and sets any needed information
     /// </summary>
     /// <param name="typein">Type of Button as an integer, see GameHandler</param>
-    /// <param name="curbeat">Current beat of the song</param>
-    /// <param name="indexin">The index of the button array that this button belongs to</param>
+    /// <param name="curbeat">Current Beat of the song</param>
+    /// <param name="indexin">The NoteIndex of the button array that this button belongs to</param>
     public void Init(int typein, float curbeat, int indexin, int trackin, Button buttonClass)
     {
         // Create button
-        beat = curbeat;
+        Beat = curbeat;
         gameHandler = FindObjectOfType<GameHandler>();
         musicHandler = FindObjectOfType<MusicHandler>();
         var types = gameHandler.NoteTypes;
         renderer = GetComponent<SpriteRenderer>();
         renderer.sprite = types[typein];
-        type = typein;
-        index = indexin;
-        track = trackin;
-        // For future me, this range is the "Hold" sprites in the GameHandler's type array.
-        sus = IsSustain(type);
-        btn = new ButtonClass(gameObject, gameHandler.NoteInputs[type], gameHandler.NoteInputsAlt[type], buttonClass);
+        NoteType = typein;
+        NoteIndex = indexin;
+        Track = trackin;
+        // For future me, this range is the "Hold" sprites in the GameHandler's NoteType array.
+        Sustain = IsSustain(NoteType);
+        BtnClass = new ButtonClass(gameObject, gameHandler.NoteInputs[NoteType], gameHandler.NoteInputsAlt[NoteType], buttonClass);
     }
 
     /// <summary>
@@ -119,7 +113,7 @@ public class Button : MonoBehaviour
     /// <param name="pos">Current song position in beats</param>
     /// <param name="bpm">Song Beats per Minute</param>
     /// <param name="beat">Beat of the note in question</param>
-    /// <returns>The rank index</returns>
+    /// <returns>The rank NoteIndex</returns>
     public static GameHandler.Rank GetRank(float pos, float bpm, float beat)
     {
         if (pos <= beat && pos > beat - bpm / 60 / 5 || pos >= beat && pos < beat + bpm / 60 / 5)
@@ -135,8 +129,8 @@ public class Button : MonoBehaviour
 
     private void Update()
     {
-        // If the button reaches the "fadeEnd" part of the path, kill it with a missed ranking
-        if (beat / musicHandler.LengthInBeats <= musicHandler.FadeEnd) 
+        // If the button reaches the "fadeEnd" part of the BeatPath, kill it with a missed ranking
+        if (Beat / musicHandler.LengthInBeats <= musicHandler.FadeEnd) 
             Missed();
     }
 }

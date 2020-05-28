@@ -63,7 +63,7 @@ public class GameHandler : MonoBehaviour
     /// <summary>
     /// Simply a wrapper for the SceneManager loadscene
     /// </summary>
-    /// <param name="scene">The scene index to load</param>
+    /// <param name="scene">The scene NoteIndex to load</param>
     private void LoadScene(int scene)
     {
         SceneManager.LoadScene(scene);

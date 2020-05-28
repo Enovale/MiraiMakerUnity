@@ -29,14 +29,14 @@ public class InputHandler : MonoBehaviour
     /// Here's how it works:
     /// "Next" refers to the earliest note in the timing window.
     /// On Key press:
-    /// - Is the next note a double note? (two notes on the same beat for each track)
+    /// - Is the next note a double note? (two NoteVectors on the same Beat for each Track)
     ///   - No: Handle normally, end method
-    /// - Get the next note on track one
+    /// - Get the next note on Track one
     ///   - Is there one that matches the Key we pressed?
     ///     - Yes: Hit it
     ///     - Hit both inputs at once: Hit the first, then go to No
-    ///     - No: Is there one on the second track?
-    ///       - No: Miss the next note on track 1, track 2 if there are none
+    ///     - No: Is there one on the second Track?
+    ///       - No: Miss the next note on Track 1, Track 2 if there are none
     ///       - Yes: Hit it
     /// </summary>
     private void HandleInput()
@@ -47,12 +47,12 @@ public class InputHandler : MonoBehaviour
             var trackTwoNotes = musicHandler.GetButtonsInTimingWindow(false);
 
             var pos = musicHandler.SongPosInBeats;
-            var bpm = musicHandler.BPM;
+            var bpm = musicHandler.Level.BPM;
             if (trackOneNotes.Any() && trackTwoNotes.Any())
             {
                 var btn1 = trackOneNotes.First();
                 var btn2 = trackTwoNotes.First();
-                if (btn1.Button.beat < btn2.Button.beat)
+                if (btn1.Button.Beat < btn2.Button.Beat)
                 {
                     if (Input.GetKeyDown(btn1.Key) || Input.GetKeyDown(btn1.KeyAlt))
                     {
@@ -65,7 +65,7 @@ public class InputHandler : MonoBehaviour
                         return;
                     }
                 }
-                else if (btn1.Button.beat > btn2.Button.beat)
+                else if (btn1.Button.Beat > btn2.Button.Beat)
                 {
                     if (Input.GetKeyDown(btn2.Key) || Input.GetKeyDown(btn2.KeyAlt))
                     {
@@ -126,7 +126,7 @@ public class InputHandler : MonoBehaviour
     /// </summary>
     private void HandlePressNote(Button btn)
     {
-        btn.Hit(musicHandler.SongPosInBeats, musicHandler.BPM);
+        btn.Hit(musicHandler.SongPosInBeats, musicHandler.Level.BPM);
     }
 
     /// <summary>
