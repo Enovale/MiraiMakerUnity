@@ -59,7 +59,7 @@ public class CustomSongLoader : MonoBehaviour
         {
             yield return www.SendWebRequest();
 
-            if (www.isNetworkError)
+            if (www.result == UnityWebRequest.Result.ConnectionError)
             {
                 Debug.Log(www.error);
             }

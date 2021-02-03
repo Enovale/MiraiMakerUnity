@@ -71,9 +71,9 @@ public class GameHandler : MonoBehaviour
 
     public void ResetButtons()
     {
-        foreach (var btn in SongButtons)         
+        foreach (var btn in SongButtons)
             Destroy(btn.ButtonObj);
-        foreach (var btn in SongButtons2)         
+        foreach (var btn in SongButtons2)
             Destroy(btn.ButtonObj);
         SongButtons.Clear();
         SongButtons2.Clear();
@@ -98,9 +98,10 @@ public class GameHandler : MonoBehaviour
     private void Update()
     {
         // Only run this code in-game
-        if (_isMusicHandlerNotNull)
-            if (musicHandler.SongFinished == true)
-                LoadScene(2);
+        if (SceneManager.GetActiveScene() != SceneManager.GetSceneByBuildIndex(2))
+            if (_isMusicHandlerNotNull)
+                if (musicHandler.SongFinished == true)
+                    LoadScene(2);
 
         // FPS calculation
         frameCount++;

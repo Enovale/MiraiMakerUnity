@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System.IO;
@@ -11,10 +12,24 @@ using UnityEngine.Video;
 /// </summary>
 public class MusicHandler : MonoBehaviour
 {
+    // Resync video after 1 second
+    [Header("Configuration")]
+    public float VideoDesyncTolerance = 1;
+
+    public float AudioPosition
+    {
+        get => MyAS.time;
+        set => MyAS.time = value;
+    }
+
+    private bool _seeking = false;
+
     #region References
 
+    [Header("References")]
     // Many gameobject references and references to the song file
     public AudioClip SongClip;
+
     public VideoPlayer MovieClip;
     public LevelClass Level;
     public AudioSource MyAS;
@@ -108,7 +123,8 @@ public class MusicHandler : MonoBehaviour
         var intervalBeatSize = Level.CameraKeyframes[endInterval].x - Level.CameraKeyframes[startInterval].x;
         // Linearly interpolate the current Beat position as a BeatPath percentage
         // You could use some other update rule here if you don't want linear interpolation
-        var percent = startPercent + (endPercent - startPercent) * (SongPosInBeats - Level.CameraKeyframes[startInterval].x) /
+        var percent = startPercent + (endPercent - startPercent) *
+            (SongPosInBeats - Level.CameraKeyframes[startInterval].x) /
             intervalBeatSize;
         return percent;
     }
@@ -130,13 +146,13 @@ public class MusicHandler : MonoBehaviour
 
     public void MoveSlider()
     {
-        MyAS.time = SongLength * SliderObj.GetComponent<Slider>().value;
+        AudioPosition = SongLength * SliderObj.GetComponent<Slider>().value;
     }
 
     public List<ButtonClass> GetSpawnedButtons(bool firstTrack)
     {
         if (gameHandler == null) return new List<ButtonClass>();
-        if (firstTrack) 
+        if (firstTrack)
             return gameHandler.SongButtons.Where(btn => btn.Button != null).ToList();
 
         return gameHandler.SongButtons2.Where(btn => btn.Button != null).ToList();
@@ -187,14 +203,12 @@ public class MusicHandler : MonoBehaviour
 
         CancelInvoke(nameof(MyUpdate));
 
-        MovieClip.Prepare();
-
         gameHandler.ResetButtons();
 
         #region Clear Variables
 
         MyAS.Stop();
-        MyAS.time = 0;
+        AudioPosition = 0;
         BeatLength = 0;
         LengthInBeats = 0;
         SongLength = 0;
@@ -220,35 +234,57 @@ public class MusicHandler : MonoBehaviour
         SongLength = SongClip.length - Level.FirstBeatOffset;
 
         // Get the time that the song starts
-        TimeSinceSongStart = MyAS.time;
+        TimeSinceSongStart = AudioPosition;
 
         // Play the actual song
         MyAS.clip = SongClip;
         MyAS.Play();
 
+        // Spawn the sparks on the end of the BeatPath
+        sparksObj = Instantiate(SparksPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
+
+        var invokeUpdate = new Action(() =>
+        {
+            InvokeRepeating(nameof(MyUpdate), 0,
+                GameHandler.FrameTime); // Only run update a set amount of times per second
+        });
+
         if (!string.IsNullOrEmpty(Level.MoviePath))
         {
             Level.MoviePath = "file:///" + Path.GetDirectoryName(Application.dataPath) + "/" + Level.MoviePath;
             MovieClip.url = Level.MoviePath;
-            MovieClip.Play();
-            MovieClip.playbackSpeed = 1; // Evenetually the user will select this
+            MovieClip.playbackSpeed = 1; // Eventually the user will select this
+            MovieClip.prepareCompleted += source =>
+            {
+                MovieClip.Play();
+                invokeUpdate();
+            };
+            MovieClip.seekCompleted += source => _seeking = false;
+            try
+            {
+                MovieClip.Prepare();
+            }
+            catch (Exception e)
+            {
+                Debug.LogError(e);
+                invokeUpdate();
+            }
         }
-
-        // Spawn the sparks on the end of the BeatPath
-        sparksObj = Instantiate(SparksPrefab, new Vector3(0, 0, 0), new Quaternion(0, 0, 0, 0));
-
-        InvokeRepeating("MyUpdate", 0, GameHandler.FrameTime); // Only run update a set amount of times per second
+        else
+            invokeUpdate();
     }
 
     private void Update()
     {
         // Seek the movie (if it exists) to the part of the song we're at
-        /*
-        if (MoviePath != "" && movie.isPlaying)
+        // IF it get's desynced more than the set tolerance
+        if (MovieClip.url != "" && MovieClip.isPlaying &&
+            Math.Abs(AudioPosition - MovieClip.time) > VideoDesyncTolerance &&
+            _seeking == false)
         {
-            movie.frame = (long)(movie.frameCount * (songPosition / length));
+            MovieClip.time = AudioPosition;
+            _seeking = true;
         }
-        */
     }
 
     /// <summary>
@@ -263,8 +299,11 @@ public class MusicHandler : MonoBehaviour
         var end1 = (SongPosInBeats + Level.PathBeatsInAdvance) / LengthInBeats;
         var end2 = end1;
         gradient.SetKeys(
-            new GradientColorKey[] {new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f)},
-            new GradientAlphaKey[]
+            new[]
+            {
+                new GradientColorKey(Color.white, 0.0f), new GradientColorKey(Color.white, 1.0f)
+            },
+            new[]
             {
                 new GradientAlphaKey(0, gradient1), new GradientAlphaKey(1, FadeEnd), new GradientAlphaKey(1, end1),
                 new GradientAlphaKey(0, end2), new GradientAlphaKey(0, 1.0f)
@@ -284,18 +323,17 @@ public class MusicHandler : MonoBehaviour
     private void MyUpdate()
     {
         //Debugging
-        if (gameHandler.DebugMode == true)
+        if (gameHandler.DebugMode)
         {
             //print(nextIndex);
         }
 
         // Set finished to true if the song is over
-        if (MyAS.isPlaying != true && Paused == false) SongFinished = true;
+        if (!MyAS.isPlaying && !Paused)
+            SongFinished = true;
 
         // Calculate the position in seconds
-        SongPosition = MyAS.time - TimeSinceSongStart - Level.FirstBeatOffset;
-
-        // Calculate the position in beats
+        SongPosition = AudioPosition - TimeSinceSongStart - Level.FirstBeatOffset;
         SongPosInBeats = SongPosition / BeatLength;
 
         // Handle extending the button if a second Track button is coming up
@@ -306,9 +344,10 @@ public class MusicHandler : MonoBehaviour
         if (anyTrackTwoNotes)
         {
             positionToExtend = trackTwoNotes.First().Button.Beat - Level.BeatsBetweenExtend;
-            if (SongPosInBeats > positionToExtend && !gameHandler.cursorExtended) ExtendCursor();
+            if (SongPosInBeats > positionToExtend && !gameHandler.cursorExtended)
+                ExtendCursor();
         }
-        else if (!anyTrackTwoNotes)
+        else
         {
             if (NextNoteIndex2 > 0)
             {
@@ -320,27 +359,33 @@ public class MusicHandler : MonoBehaviour
         }
 
         // If it's time to spawn the next note based on the BeatsInAdvance, do so
-        if (NextNoteIndex < Level.NoteVectors.Length && Level.NoteVectors[NextNoteIndex].x < SongPosInBeats + Level.BeatsInAdvance)
+        if (NextNoteIndex < Level.NoteVectors.Length &&
+            Level.NoteVectors[NextNoteIndex].x < SongPosInBeats + Level.BeatsInAdvance)
         {
             // Spawn it and initialize the fields of the music note
-            var button = ButtonSpawner.spawn(Level.NoteVectors[NextNoteIndex].x / LengthInBeats, Level.NoteVectors[NextNoteIndex].y,
-               Level. NoteVectors[NextNoteIndex].x, NextNoteIndex, 0);
+            var button = ButtonSpawner.spawn(Level.NoteVectors[NextNoteIndex].x / LengthInBeats,
+                Level.NoteVectors[NextNoteIndex].y,
+                Level.NoteVectors[NextNoteIndex].x, NextNoteIndex, 0);
             gameHandler.SongButtons.Add(new ButtonClass(button,
                 gameHandler.NoteInputs[button.GetComponent<Button>().NoteType],
-                gameHandler.NoteInputsAlt[button.GetComponent<Button>().NoteType], button.GetComponent<Button>()));
+                gameHandler.NoteInputsAlt[button.GetComponent<Button>().NoteType], 
+                button.GetComponent<Button>()));
 
             NextNoteIndex++;
         }
 
         // Same as before but for the second note Track
-        if (NextNoteIndex2 < Level.NoteVectors2.Length && Level.NoteVectors2[NextNoteIndex2].x < SongPosInBeats + Level.BeatsInAdvance)
+        if (NextNoteIndex2 < Level.NoteVectors2.Length &&
+            Level.NoteVectors2[NextNoteIndex2].x < SongPosInBeats + Level.BeatsInAdvance)
         {
             // Spawn it and initialize the fields of the music note
             var button = ButtonSpawner.spawn(Level.NoteVectors2[NextNoteIndex2].x / LengthInBeats,
-                Level.NoteVectors2[NextNoteIndex2].y, Level.NoteVectors2[NextNoteIndex2].x, NextNoteIndex2, 1);
+                Level.NoteVectors2[NextNoteIndex2].y, Level.NoteVectors2[NextNoteIndex2].x, 
+                NextNoteIndex2, 1);
             gameHandler.SongButtons2.Add(new ButtonClass(button,
                 gameHandler.NoteInputs[button.GetComponent<Button>().NoteType],
-                gameHandler.NoteInputsAlt[button.GetComponent<Button>().NoteType], button.GetComponent<Button>()));
+                gameHandler.NoteInputsAlt[button.GetComponent<Button>().NoteType], 
+                button.GetComponent<Button>()));
 
             NextNoteIndex2++;
         }
@@ -351,6 +396,8 @@ public class MusicHandler : MonoBehaviour
             var slider = SliderObj.GetComponent<Slider>();
             slider.SetValueWithoutNotify(SongPosInBeats / LengthInBeats);
         }
+        else
+            SliderObj.SetActive(false);
 
         // Fadeout line after passing
         UpdateLineVisuals();
@@ -359,7 +406,7 @@ public class MusicHandler : MonoBehaviour
         var cursorPos = cursorMP.motionPath.PointOnNormalizedPath(SongPosInBeats / LengthInBeats);
         var cursorNorm = cursorMP.motionPath.NormalOnNormalizedPath(SongPosInBeats / LengthInBeats);
         CursorObj.transform.position = cursorPos;
-        if (gameHandler.cursorFlipped == true) // Frankly i'm not sure why this is ever flipped, need to read code
+        if (gameHandler.cursorFlipped) // Frankly i'm not sure why this is ever flipped, need to read code
             CursorObj.transform.right = cursorNorm * -1;
         else
             CursorObj.transform.right = cursorNorm;
@@ -367,52 +414,5 @@ public class MusicHandler : MonoBehaviour
         var final = GetCamPathProgress();
         var cameraPos = CameraMP.PointOnNormalizedPath(final);
         GameCamera.transform.position = cameraPos;
-
-        /* I'm Keeping this commented for now because even though I doubt i'll ever need this,
-         * I have this feeling that I shouldnt go around thanos snapping all my old code.
-        // Determines whether or not the button is the next that should be being hit
-        foreach (ButtonClass button in gameHandler.buttons)
-        {
-            if (button.ButtonObj == null) continue;
-            Button ButtonObj = button.Button;
-            if (Button.GetRank(songPosInBeats, BPM, button.Button.Beat) == GameHandler.Rank.Missed && ButtonObj.Beat < songPosInBeats)
-            {
-                ButtonObj.upNext = false;
-                //return;
-            }
-            else if ((gameHandler.buttons.Count != 0 && ButtonObj.NoteIndex >= 0))
-            {
-                ButtonObj.upNext = true;
-                FirstLineNextButton = ButtonObj;
-                break;
-            }
-            else
-            {
-                ButtonObj.upNext = false;
-            }
-        }
-
-        // Same thing for Track 2
-        foreach (ButtonClass button in gameHandler.buttons2)
-        {
-            if (button.ButtonObj == null) continue;
-            Button ButtonObj = button.Button;
-            if (Button.GetRank(songPosInBeats, BPM, button.Button.Beat) == GameHandler.Rank.Missed && ButtonObj.Beat < songPosInBeats)
-            {
-                ButtonObj.upNext = false;
-                //return;
-            }
-            else if ((gameHandler.buttons2.Count != 0 && ButtonObj.NoteIndex >= 0))
-            {
-                ButtonObj.upNext = true;
-                SecondLineNextButton = ButtonObj;
-                break;
-            }
-            else
-            {
-                ButtonObj.upNext = false;
-            }
-        }
-        */
     }
 }
