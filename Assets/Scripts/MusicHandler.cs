@@ -8,7 +8,7 @@ using UnityEngine.UI;
 using UnityEngine.Video;
 
 /// <summary>
-/// This class manages the game's musical state, i.e spawning NoteVectors, cursor position, etc
+/// This class manages the game's musical state, i.e spawning notes, cursor position, etc
 /// </summary>
 public class MusicHandler : MonoBehaviour
 {

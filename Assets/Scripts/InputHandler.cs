@@ -9,6 +9,9 @@ public class InputHandler : MonoBehaviour
     private GameHandler gameHandler;
     private MusicHandler musicHandler;
 
+    private int? _trackOneHold;
+    private int? _trackTwoHold;
+
     private void Awake()
     {
         gameHandler = FindObjectsOfType<GameHandler>()[0];
@@ -23,24 +26,29 @@ public class InputHandler : MonoBehaviour
         HandleInput();
     }
 
-    /// <summary>
-    /// Handle note registration.
-    /// 
-    /// Here's how it works:
-    /// "Next" refers to the earliest note in the timing window.
-    /// On Key press:
-    /// - Is the next note a double note? (two NoteVectors on the same Beat for each Track)
-    ///   - No: Handle normally, end method
-    /// - Get the next note on Track one
-    ///   - Is there one that matches the Key we pressed?
-    ///     - Yes: Hit it
-    ///     - Hit both inputs at once: Hit the first, then go to No
-    ///     - No: Is there one on the second Track?
-    ///       - No: Miss the next note on Track 1, Track 2 if there are none
-    ///       - Yes: Hit it
-    /// </summary>
+    /*
+    * Handle note registration.
+    *
+    * Here's how it works:
+    * "Next" refers to the earliest note in the timing window.
+    * On Key press:
+    * - Is the next note a double note? (two Notes on the same Beat for each Track)
+    *   - No: Handle normally, end method
+    * - Get the next note on Track one
+    *   - Is there one that matches the Key we pressed?
+    *     - Yes: Hit it
+    *     - Hit both inputs at once: Hit the first, then go to No
+    *     - No: Is there one on the second Track?
+    *       - No: Miss the next note on Track 1, Track 2 if there are none
+    *       - Yes: Hit it
+    */
     private void HandleInput()
     {
+        if (_trackOneHold != null)
+            HandleHoldNote(0);
+        if (_trackTwoHold != null)
+            HandleHoldNote(1);
+
         if (Input.anyKeyDown)
         {
             var trackOneNotes = musicHandler.GetButtonsInTimingWindow(true);
@@ -126,13 +134,16 @@ public class InputHandler : MonoBehaviour
     /// </summary>
     private void HandlePressNote(Button btn)
     {
+        if (btn.Sustain)
+            if (btn.Track == 0)
+                _trackOneHold = btn.NoteType;
+            else
+                _trackTwoHold = btn.NoteType;
         btn.Hit(musicHandler.SongPosInBeats, musicHandler.Level.BPM);
     }
 
-    /// <summary>
-    /// Logic for holding down a sustain note
-    /// </summary>
-    private void HandleHoldNote(Button btn, KeyCode keyPressed)
+    private void HandleHoldNote(int track)
     {
+        // Stub
     }
 }
