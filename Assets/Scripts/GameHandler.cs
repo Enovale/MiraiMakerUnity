@@ -12,11 +12,12 @@ public class GameHandler : MonoBehaviour
     /// <summary>
     /// Enables a song position slider and seeing certain information in the console.
     /// </summary>
-    public bool DebugMode = false;
+    public bool DebugMode;
 
     public Sprite[] NoteTypes;
-    public List<ButtonClass> SongButtons;
-    public List<ButtonClass> SongButtons2;
+    public Sprite[] HoldTypes;
+    public List<SerializedButton> SongButtons;
+    public List<SerializedButton> SongButtons2;
     public KeyCode[] NoteInputs;
     public KeyCode[] NoteInputsAlt;
 
@@ -50,15 +51,6 @@ public class GameHandler : MonoBehaviour
 
     private MusicHandler musicHandler;
     private bool _isMusicHandlerNotNull;
-
-    public enum Rank
-    {
-        Cool = 0,
-        Fine = 1,
-        Safe = 2,
-        Sad = 3,
-        Missed = 4
-    }
 
     /// <summary>
     /// Simply a wrapper for the SceneManager loadscene

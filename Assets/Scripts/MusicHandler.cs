@@ -13,8 +13,46 @@ using UnityEngine.Video;
 public class MusicHandler : MonoBehaviour
 {
     // Resync video after 1 second
-    [Header("Configuration")]
-    public float VideoDesyncTolerance = 1;
+    [Header("Configuration")] public float VideoDesyncTolerance = 1;
+
+    [Header("Game variables")]
+    // The current position of the beatmap (in seconds)
+    public float SongPosition;
+
+    // The current position of the beatmap (in beats)
+    public float SongPosInBeats;
+
+    // Song has finished playing
+    public bool SongFinished = false;
+
+    [HideInInspector]
+    // The duration of a Beat
+    public float BeatLength;
+
+    [HideInInspector]
+    // I literally have no fucking clue what this is
+    public float FadeEnd;
+
+    [HideInInspector]
+    // How much time (in seconds) has passed since the song started
+    public float TimeSinceSongStart;
+
+    public float SongLength;
+    public bool Paused = false;
+
+    public float LengthInBeats;
+
+    [HideInInspector]
+    /// <summary>
+    /// The NoteIndex of the next note to be spawned on Track 1.
+    /// </summary>
+    public int NextNoteIndex = 0;
+
+    [HideInInspector]
+    /// <summary>
+    /// The NoteIndex of the next note to be spawned on Track 2.
+    /// </summary>
+    public int NextNoteIndex2 = 0;
 
     public float AudioPosition
     {
@@ -41,42 +79,6 @@ public class MusicHandler : MonoBehaviour
     public GameObject GamePath;
     public GameObject SliderObj;
     public GameObject SparksPrefab;
-
-    // The current position of the beatmap (in seconds)
-    public float SongPosition;
-
-    // The current position of the beatmap (in beats)
-    public float SongPosInBeats;
-
-    // Song has finished playing
-    public bool SongFinished = false;
-
-    // The duration of a Beat
-    [HideInInspector] public float BeatLength;
-
-    [HideInInspector]
-    // I literally have no fucking clue what this is
-    public float FadeEnd;
-
-    // How much time (in seconds) has passed since the song started
-    [HideInInspector] public float TimeSinceSongStart;
-
-    public float SongLength;
-    public bool Paused = false;
-
-    public float LengthInBeats;
-
-    [HideInInspector]
-    /// <summary>
-    /// The NoteIndex of the next note to be spawned on Track 1.
-    /// </summary>
-    public int NextNoteIndex = 0;
-
-    [HideInInspector]
-    /// <summary>
-    /// The NoteIndex of the next note to be spawned on Track 2.
-    /// </summary>
-    public int NextNoteIndex2 = 0;
 
     /// <summary>
     /// The button on the first line that has UpNext
@@ -149,18 +151,18 @@ public class MusicHandler : MonoBehaviour
         AudioPosition = SongLength * SliderObj.GetComponent<Slider>().value;
     }
 
-    public List<ButtonClass> GetSpawnedButtons(bool firstTrack)
+    public List<SerializedButton> GetSpawnedButtons(bool firstTrack)
     {
-        if (gameHandler == null) return new List<ButtonClass>();
+        if (gameHandler == null) return new List<SerializedButton>();
         if (firstTrack)
             return gameHandler.SongButtons.Where(btn => btn.Button != null).ToList();
 
         return gameHandler.SongButtons2.Where(btn => btn.Button != null).ToList();
     }
 
-    public List<ButtonClass> GetButtonsInTimingWindow(bool firstTrack)
+    public List<SerializedButton> GetButtonsInTimingWindow(bool firstTrack)
     {
-        if (gameHandler == null) return new List<ButtonClass>();
+        if (gameHandler == null) return new List<SerializedButton>();
         if (firstTrack) return gameHandler.SongButtons.Where(btn => ButtonWithinTimingWindow(btn.Button)).ToList();
 
         return gameHandler.SongButtons2.Where(btn => ButtonWithinTimingWindow(btn.Button)).ToList();
@@ -169,7 +171,7 @@ public class MusicHandler : MonoBehaviour
     public bool ButtonWithinTimingWindow(Button btn)
     {
         if (btn != null)
-            if (Button.GetRank(SongPosInBeats, Level.BPM, btn.Beat) != GameHandler.Rank.Missed)
+            if (Button.GetRank(SongPosInBeats, Level.BPM, btn.Beat) != Rank.Missed)
                 return true;
         return false;
     }
@@ -339,9 +341,8 @@ public class MusicHandler : MonoBehaviour
         // Handle extending the button if a second Track button is coming up
         // This can probably be further optimized
         var trackTwoNotes = GetSpawnedButtons(false);
-        var anyTrackTwoNotes = trackTwoNotes.Any();
         float positionToExtend;
-        if (anyTrackTwoNotes)
+        if (trackTwoNotes.Any())
         {
             positionToExtend = trackTwoNotes.First().Button.Beat - Level.BeatsBetweenExtend;
             if (SongPosInBeats > positionToExtend && !gameHandler.cursorExtended)
@@ -352,39 +353,40 @@ public class MusicHandler : MonoBehaviour
             if (NextNoteIndex2 > 0)
             {
                 // Gets the last note in the second Track and adds the BeatsBetweenExtend
-                positionToExtend = Level.NoteVectors2[NextNoteIndex2 - 1].x + Level.BeatsBetweenExtend;
+                positionToExtend = Level.NotesTrack2[NextNoteIndex2 - 1].Beat + Level.BeatsBetweenExtend;
 
-                if (SongPosInBeats > positionToExtend && gameHandler.cursorExtended) ExtendCursor();
+                if (SongPosInBeats > positionToExtend && gameHandler.cursorExtended)
+                    ExtendCursor();
             }
         }
 
         // If it's time to spawn the next note based on the BeatsInAdvance, do so
-        if (NextNoteIndex < Level.NoteVectors.Length &&
-            Level.NoteVectors[NextNoteIndex].x < SongPosInBeats + Level.BeatsInAdvance)
+        if (NextNoteIndex < Level.Notes.Length &&
+            Level.Notes[NextNoteIndex].Beat < SongPosInBeats + Level.BeatsInAdvance)
         {
+            var note = Level.Notes[NextNoteIndex];
             // Spawn it and initialize the fields of the music note
-            var button = ButtonSpawner.spawn(Level.NoteVectors[NextNoteIndex].x / LengthInBeats,
-                Level.NoteVectors[NextNoteIndex].y,
-                Level.NoteVectors[NextNoteIndex].x, NextNoteIndex, 0);
-            gameHandler.SongButtons.Add(new ButtonClass(button,
-                gameHandler.NoteInputs[button.GetComponent<Button>().NoteType],
-                gameHandler.NoteInputsAlt[button.GetComponent<Button>().NoteType], 
+            var button = ButtonSpawner.Spawn(note.Beat / LengthInBeats,
+                note.Type, note.Sustain, note.Beat, 0);
+            gameHandler.SongButtons.Add(new SerializedButton(button,
+                gameHandler.NoteInputs[note.Type],
+                gameHandler.NoteInputsAlt[note.Type],
                 button.GetComponent<Button>()));
 
             NextNoteIndex++;
         }
 
         // Same as before but for the second note Track
-        if (NextNoteIndex2 < Level.NoteVectors2.Length &&
-            Level.NoteVectors2[NextNoteIndex2].x < SongPosInBeats + Level.BeatsInAdvance)
+        if (NextNoteIndex2 < Level.NotesTrack2.Length &&
+            Level.NotesTrack2[NextNoteIndex2].Beat < SongPosInBeats + Level.BeatsInAdvance)
         {
             // Spawn it and initialize the fields of the music note
-            var button = ButtonSpawner.spawn(Level.NoteVectors2[NextNoteIndex2].x / LengthInBeats,
-                Level.NoteVectors2[NextNoteIndex2].y, Level.NoteVectors2[NextNoteIndex2].x, 
-                NextNoteIndex2, 1);
-            gameHandler.SongButtons2.Add(new ButtonClass(button,
+            var button = ButtonSpawner.Spawn(Level.NotesTrack2[NextNoteIndex2].Beat / LengthInBeats,
+                Level.NotesTrack2[NextNoteIndex2].Type, Level.NotesTrack2[NextNoteIndex2].Sustain,
+                Level.NotesTrack2[NextNoteIndex2].Beat, 1);
+            gameHandler.SongButtons2.Add(new SerializedButton(button,
                 gameHandler.NoteInputs[button.GetComponent<Button>().NoteType],
-                gameHandler.NoteInputsAlt[button.GetComponent<Button>().NoteType], 
+                gameHandler.NoteInputsAlt[button.GetComponent<Button>().NoteType],
                 button.GetComponent<Button>()));
 
             NextNoteIndex2++;

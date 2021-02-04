@@ -17,8 +17,8 @@ public class LevelClass
     // How many beats it takes until the cursor extends
     public float BeatsBetweenExtend;
 #pragma warning disable CA2235 // Mark all non-serializable fields
-    public Vector2[] NoteVectors;
-    public Vector2[] NoteVectors2;
+    public Note[] Notes;
+    public Note[] NotesTrack2;
     // Camera animation
     public Vector2[] CameraKeyframes;
     public Vector3[] BeatPath;

@@ -13,16 +13,11 @@ public class RankText : MonoBehaviour
     public SpriteRenderer spriteRend;
     public Animator spriteAnim;
 
-    // Start is called before the first frame update
-    private void Start()
-    {
-    }
-
     /// <summary>
     /// Change sprite to match rank and start animation
     /// </summary>
     /// <param name="rank">Accuracy of the hit</param>
-    public void Init(GameHandler.Rank rank)
+    public void Init(Rank rank)
     {
         spriteRend.sprite = rankSprites[(int) rank];
     }

@@ -43,7 +43,7 @@ RenderSettings:
 --- !u!157 &3
 LightmapSettings:
   m_ObjectHideFlags: 0
-  serializedVersion: 11
+  serializedVersion: 12
   m_GIWorkflowMode: 1
   m_GISettings:
     serializedVersion: 2
@@ -98,7 +98,7 @@ LightmapSettings:
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
   m_LightingDataAsset: {fileID: 0}
-  m_UseShadowmask: 1
+  m_LightingSettings: {fileID: 1029551998}
 --- !u!196 &4
 NavMeshSettings:
   serializedVersion: 2
@@ -118,6 +118,8 @@ NavMeshSettings:
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
+    maxJobWorkers: 0
+    preserveTilesOutsideBounds: 0
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
@@ -174,6 +176,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 0
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -204,6 +207,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 972560037}
+        m_TargetAssemblyTypeName: 
         m_MethodName: WriteLevelToJSON
         m_Mode: 1
         m_Arguments:
@@ -229,6 +233,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -397,6 +403,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -602,6 +610,7 @@ Light:
   m_UseColorTemperature: 0
   m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
   m_UseBoundingSphereOverride: 0
+  m_UseViewFrustumForShadowCasterCull: 1
   m_ShadowRadius: 0
   m_ShadowAngle: 0
 --- !u!1 &226444428
@@ -656,6 +665,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -758,6 +768,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -876,6 +888,7 @@ SpriteRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 0
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -1082,6 +1095,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 0.19607843, g: 0.19607843, b: 0.19607843, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1202,6 +1217,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1275,6 +1292,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1341,6 +1360,67 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   musicHandler: {fileID: 2064718266}
   filePath: test.json
+--- !u!850595691 &1029551998
+LightingSettings:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: Settings.lighting
+  serializedVersion: 3
+  m_GIWorkflowMode: 1
+  m_EnableBakedLightmaps: 0
+  m_EnableRealtimeLightmaps: 0
+  m_RealtimeEnvironmentLighting: 1
+  m_BounceScale: 1
+  m_AlbedoBoost: 1
+  m_IndirectOutputScale: 1
+  m_UsingShadowmask: 1
+  m_BakeBackend: 0
+  m_LightmapMaxSize: 1024
+  m_BakeResolution: 40
+  m_Padding: 2
+  m_TextureCompression: 1
+  m_AO: 0
+  m_AOMaxDistance: 1
+  m_CompAOExponent: 1
+  m_CompAOExponentDirect: 0
+  m_ExtractAO: 0
+  m_MixedBakeMode: 2
+  m_LightmapsBakeMode: 1
+  m_FilterMode: 1
+  m_LightmapParameters: {fileID: 15204, guid: 0000000000000000f000000000000000, type: 0}
+  m_ExportTrainingData: 0
+  m_TrainingDataDestination: TrainingData
+  m_RealtimeResolution: 2
+  m_ForceWhiteAlbedo: 0
+  m_ForceUpdates: 0
+  m_FinalGather: 0
+  m_FinalGatherRayCount: 256
+  m_FinalGatherFiltering: 1
+  m_PVRCulling: 1
+  m_PVRSampling: 1
+  m_PVRDirectSampleCount: 32
+  m_PVRSampleCount: 500
+  m_PVREnvironmentSampleCount: 500
+  m_PVREnvironmentReferencePointCount: 2048
+  m_LightProbeSampleCountMultiplier: 4
+  m_PVRBounces: 2
+  m_PVRMinBounces: 2
+  m_PVREnvironmentMIS: 0
+  m_PVRFilteringMode: 2
+  m_PVRDenoiserTypeDirect: 0
+  m_PVRDenoiserTypeIndirect: 0
+  m_PVRDenoiserTypeAO: 0
+  m_PVRFilterTypeDirect: 0
+  m_PVRFilterTypeIndirect: 0
+  m_PVRFilterTypeAO: 0
+  m_PVRFilteringGaussRadiusDirect: 1
+  m_PVRFilteringGaussRadiusIndirect: 5
+  m_PVRFilteringGaussRadiusAO: 2
+  m_PVRFilteringAtrousPositionSigmaDirect: 0.5
+  m_PVRFilteringAtrousPositionSigmaIndirect: 2
+  m_PVRFilteringAtrousPositionSigmaAO: 1
 --- !u!1 &1031007509
 GameObject:
   m_ObjectHideFlags: 0
@@ -1474,6 +1554,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
+  m_PresetInfoIsWorld: 0
 --- !u!223 &1174464152
 Canvas:
   m_ObjectHideFlags: 0
@@ -1558,6 +1639,7 @@ VideoPlayer:
   m_Looping: 1
   m_WaitForFirstFrame: 0
   m_FrameReadyEventEnabled: 0
+  m_VideoShaders: []
 --- !u!1 &1232659865
 GameObject:
   m_ObjectHideFlags: 0
@@ -1611,14 +1693,21 @@ MonoBehaviour:
   - {fileID: 6320126319961516777, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 3676818205159229461, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: -550729570160165689, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  HoldTypes:
+  - {fileID: 0}
   - {fileID: 1083454802004553396, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 406146498835816208, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   - {fileID: 1433376563282055704, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
-  - {fileID: -4999025007787600571, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: -2558408673681587566, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: -3781810278376292949, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: 877840879097650131, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
+  - {fileID: 543242892986885002, guid: c28b8c17075300e48a5f657adc6a6620, type: 3}
   SongButtons: []
   SongButtons2: []
-  NoteInputs: 200000006100000073000000640000006600000067000000680000006200000061000000730000006400000066000000
-  NoteInputsAlt: 000000001301000012010000110100001401000061000000730000006400000066000000000000000000000000000000
+  NoteInputs: 2000000061000000730000006400000066000000670000006800000062000000
+  NoteInputsAlt: 0000000013010000120100001101000014010000740000007900000075000000
+  cursorExtended: 0
+  cursorFlipped: 0
   NoteHitCounter: 0000000000000000000000000000000000000000
 --- !u!1 &1326033567
 GameObject:
@@ -1673,6 +1762,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 0
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1703,6 +1793,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 972560037}
+        m_TargetAssemblyTypeName: 
         m_MethodName: LoadLevelFromJSON
         m_Mode: 1
         m_Arguments:
@@ -1728,6 +1819,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -1958,6 +2051,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 0
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -1995,6 +2089,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2064718266}
+        m_TargetAssemblyTypeName: MusicHandler, Assembly-CSharp
         m_MethodName: MoveSlider
         m_Mode: 1
         m_Arguments:
@@ -2058,6 +2153,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_Navigation:
     m_Mode: 0
+    m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
     m_SelectOnLeft: {fileID: 0}
@@ -2088,6 +2184,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 2064718266}
+        m_TargetAssemblyTypeName: 
         m_MethodName: ExtendCursor
         m_Mode: 1
         m_Arguments:
@@ -2113,6 +2210,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2428,12 +2527,33 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 8b23300672b9dda40b2969bb8c44f5a0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  VideoDesyncTolerance: 1
+  SongPosition: 0
+  SongPosInBeats: 0
+  SongFinished: 0
+  BeatLength: 0.34285715
+  FadeEnd: -0.014708144
+  TimeSinceSongStart: 0
+  SongLength: 0
+  Paused: 0
+  LengthInBeats: 0
+  NextNoteIndex: 1
+  NextNoteIndex2: 0
   SongClip: {fileID: 8300000, guid: 6d9c1e1ad255a364c99173800435ac9c, type: 3}
   MovieClip: {fileID: 1182318765}
-  SongPath: /Assets/Music/Mirai/22. Ageage Again (Game Ver.).mp3
-  MoviePath: /Assets/Movies/Super Smash Bros. Ultimate Persona 5 Joker Fighter Reveal
-    Trailer - The Game Awards 2018.mp4
-  LevelName: testLevel
+  Level:
+    LevelName: 
+    SongPath: 
+    MoviePath: 
+    BPM: 0
+    FirstBeatOffset: 0
+    BeatsInAdvance: 0
+    PathBeatsInAdvance: 0
+    FadeOffsetInBeats: 0
+    BeatsBetweenExtend: 0
+    CameraKeyframes: []
+    BeatPath: []
+    CamPath: []
   MyAS: {fileID: 2064718265}
   ButtonSpawner: {fileID: 1370737673}
   CursorObj: {fileID: 1031007509}
@@ -2444,78 +2564,8 @@ MonoBehaviour:
   SliderObj: {fileID: 1641938218}
   SparksPrefab: {fileID: 8498035666364928821, guid: 6e89c9b535e8f4c4eb534c13347eb5a8,
     type: 3}
-  SongPosition: 0
-  SongPosInBeats: 0
-  SongFinished: 0
-  BeatLength: 0.34285715
-  FadeOffsetInBeats: 5
-  BeatsBetweenExtend: 8
-  FadeEnd: -0.014708144
-  TimeSinceSongStart: 0
-  FirstBeatOffset: 0.926
-  BeatsInAdvance: 5
-  PathBeatsInAdvance: 10
-  BPM: 175
-  SongLength: 0
-  Paused: 0
-  LengthInBeats: 0
-  NoteVectors:
-  - {x: 5, y: 0}
-  - {x: 10, y: 1}
-  - {x: 12, y: 2}
-  - {x: 16, y: 3}
-  - {x: 25, y: 2}
-  - {x: 30, y: 1}
-  - {x: 40, y: 0}
-  - {x: 45, y: 0}
-  - {x: 47, y: 0}
-  - {x: 60, y: 3}
-  - {x: 69, y: 2}
-  - {x: 78, y: 0}
-  - {x: 86, y: 4}
-  - {x: 90, y: 3}
-  - {x: 100, y: 1}
-  - {x: 102, y: 2}
-  - {x: 110, y: 3}
-  - {x: 115, y: 1}
-  - {x: 128, y: 4}
-  - {x: 130, y: 0}
-  - {x: 156, y: 3}
-  - {x: 168, y: 2}
-  - {x: 171, y: 0}
-  - {x: 180, y: 0}
-  - {x: 190, y: 3}
-  - {x: 201, y: 0}
-  - {x: 202, y: 2}
-  - {x: 203, y: 1}
-  - {x: 204, y: 1}
-  - {x: 210, y: 3}
-  - {x: 215, y: 2}
-  - {x: 220, y: 2}
-  - {x: 224, y: 2}
-  - {x: 226, y: 3}
-  - {x: 230, y: 4}
-  - {x: 240, y: 1}
-  - {x: 250, y: 3}
-  - {x: 260, y: 2}
-  - {x: 265, y: 0}
-  NoteVectors2:
-  - {x: 13, y: 1}
-  - {x: 15, y: 1}
-  - {x: 30, y: 10}
-  - {x: 35, y: 11}
-  - {x: 40, y: 1}
-  - {x: 45, y: 2}
-  - {x: 50, y: 3}
-  - {x: 55, y: 4}
-  - {x: 60, y: 5}
-  NextNoteIndex: 1
-  NextNoteIndex2: 0
   FirstLineNextButton: {fileID: 0}
   SecondLineNextButton: {fileID: 0}
-  CameraKeyframes:
-  - {x: 0, y: 0}
-  - {x: 256, y: 1}
 --- !u!1 &2110409343
 GameObject:
   m_ObjectHideFlags: 0
@@ -2674,6 +2724,8 @@ MonoBehaviour:
   m_Material: {fileID: 0}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
+  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
+  m_Maskable: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -2742,6 +2794,7 @@ MeshRenderer:
   m_LightProbeUsage: 1
   m_ReflectionProbeUsage: 1
   m_RayTracingMode: 2
+  m_RayTraceProcedural: 0
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
@@ -2766,6 +2819,7 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+  m_AdditionalVertexStreams: {fileID: 0}
 --- !u!33 &2147008447
 MeshFilter:
   m_ObjectHideFlags: 0

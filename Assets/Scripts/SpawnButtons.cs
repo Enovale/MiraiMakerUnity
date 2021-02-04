@@ -32,7 +32,7 @@ public class SpawnButtons : MonoBehaviour
     /// <param name="indexin">Index of the button</param>
     /// <param name="track">The Track to spawn on (0-1)</param>
     /// <returns></returns>
-    public GameObject spawn(float uv, float type, float beat, int indexin, int track)
+    public GameObject Spawn(float uv, float type, bool sustain, float beat, int track)
     {
         var buttonPos = new Vector3(path.PointOnNormalizedPath(uv).x, path.PointOnNormalizedPath(uv).y,
             buttonPrefab.transform.position.z);
@@ -51,7 +51,7 @@ public class SpawnButtons : MonoBehaviour
         if (Mathf.RoundToInt(type) >= gameHandler.NoteTypes.Length)         
             type = 0;
         var btnClass = button.GetComponent<Button>();
-        btnClass.Init(Mathf.RoundToInt(type), beat, indexin, track, btnClass);
+        btnClass.Init(Mathf.RoundToInt(type), sustain, beat, track);
         return button;
     }
 }
