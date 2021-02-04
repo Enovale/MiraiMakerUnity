@@ -87,6 +87,20 @@ public class InputHandler : MonoBehaviour
                     }
                 }
             }
+            else
+            {
+                // Hit the next possible note if you try to hit earlier than the timing window
+                var spawned1 = musicHandler.GetSpawnedButtons(true).FirstOrDefault();
+                var spawned2 = musicHandler.GetSpawnedButtons(false).FirstOrDefault();
+
+                if (spawned1 != null && spawned2 != null)
+                    HandlePressNote(
+                        Math.Abs(Math.Min(spawned1.Button.Beat, spawned2.Button.Beat) - spawned1.Button.Beat) < 0.05
+                            ? spawned1.Button
+                            : spawned2.Button);
+                else if (spawned1 != null || spawned2 != null)
+                    HandlePressNote(spawned1 != null ? spawned1.Button : spawned2.Button);
+            }
 
             var buttonHit = false;
             foreach (var button in trackOneNotes)
@@ -96,7 +110,7 @@ public class InputHandler : MonoBehaviour
                 // If you hit both on the same frame, pretend like you didnt hit the first one.
                 if (Input.GetKeyDown(button.Key) && Input.GetKeyDown(button.KeyAlt))
                 {
-                    btnClass.Hit(pos, bpm);
+                    HandlePressNote(btnClass);
                     break;
                 }
                 else if (Input.GetKeyDown(button.Key) || Input.GetKeyDown(button.KeyAlt))
