@@ -44,10 +44,19 @@ public class InputHandler : MonoBehaviour
     */
     private void HandleInput()
     {
+        // If a note is being held on a track, run holding logic
+        // instead of normal press logic
         if (_trackOneHold != null)
+        {
             HandleHoldNote(0);
+            return;
+        }
+
         if (_trackTwoHold != null)
+        {
             HandleHoldNote(1);
+            return;
+        }
 
         if (Input.anyKeyDown)
         {
@@ -108,6 +117,7 @@ public class InputHandler : MonoBehaviour
                 var btnClass = button.Button;
 
                 // If you hit both on the same frame, pretend like you didnt hit the first one.
+                // because the second input will hit the first one
                 if (Input.GetKeyDown(button.Key) && Input.GetKeyDown(button.KeyAlt))
                 {
                     HandlePressNote(btnClass);
@@ -138,14 +148,12 @@ public class InputHandler : MonoBehaviour
             {
                 if (trackOneNotes.Count > 0)
                     trackOneNotes.First().Button.Missed();
-                else if (trackTwoNotes.Count > 0) trackTwoNotes.First().Button.Missed();
+                else if (trackTwoNotes.Count > 0)
+                    trackTwoNotes.First().Button.Missed();
             }
         }
     }
 
-    /// <summary>
-    /// Logic for pressing a note (only runs when note is not a sustain note)
-    /// </summary>
     private void HandlePressNote(Button btn)
     {
         if (btn.Sustain)

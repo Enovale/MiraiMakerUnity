@@ -1,8 +1,8 @@
 {
 	"LevelName": "testLevel",
-	"SongPath": "/Assets/Music/Mirai/22. Ageage Again (Game Ver.).mp3",
+	"SongPath": "/Assets/Music/FnF/Bopeebo.mp3",
 	"MoviePath": "/Assets/Movies/smash.mp4",
-	"BPM": 175,
+	"BPM": 100,
 	"FirstBeatOffset": 0.9259999990463257,
 	"BeatsInAdvance": 10,
 	"PathBeatsInAdvance": 15,

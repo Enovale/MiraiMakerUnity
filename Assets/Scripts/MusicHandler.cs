@@ -12,8 +12,9 @@ using UnityEngine.Video;
 /// </summary>
 public class MusicHandler : MonoBehaviour
 {
+    [Header("Configuration")]
     // Resync video after 1 second
-    [Header("Configuration")] public float VideoDesyncTolerance = 1;
+    public float VideoDesyncTolerance = 1;
 
     [Header("Game variables")]
     // The current position of the beatmap (in seconds)
@@ -104,6 +105,8 @@ public class MusicHandler : MonoBehaviour
     /// <returns></returns>
     public float GetCamPathProgress()
     {
+        return SongPosition / SongLength;
+        
         // Assumed Beat Map has atleast 2 elements. TODO: correct error handling
         var startInterval = 0;
         var endInterval = 0;
@@ -321,7 +324,9 @@ public class MusicHandler : MonoBehaviour
         sparksObj.transform.right = sparksNorm;
     }
 
-    // Update is called once per frame
+    /// <summary>
+    /// Called a set amount of times per second (Not every frame because performance)
+    /// </summary>
     private void MyUpdate()
     {
         //Debugging
